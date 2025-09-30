@@ -52,7 +52,9 @@ const Loader: React.FC<LoaderProps> = ({ size, color, className, text }) => {
                         <h1 className="text-3xl font-bold text-gray-900">traliq ai</h1>
 
                         {/* Simple Spinner */}
-                        <div className={loaderVariants({ size, color, className })}></div>
+                        <div className="flex items-center justify-center">
+                            <div className={loaderVariants({ size, color, className })}></div>
+                        </div>
                     </div>
 
                     {/* Loading Text */}

@@ -51,25 +51,27 @@ export default function Header() {
                             <SheetHeader className="sr-only">
                                 <SheetTitle>Search</SheetTitle>
                             </SheetHeader>
-                            <SheetClose className="absolute right-4 top-4 rounded-full p-2 hover:bg-gray-200 transition-all duration-200 opacity-100">
-                            </SheetClose>
-                            <div className="py-6 px-4 max-w-3xl mx-auto">
-                                <div className="flex gap-2 items-center">
+                            <div className="py-6 sm:py-8 px-4 sm:px-6 max-w-4xl mx-auto">
+                                <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
                                     <div className="relative flex-1">
-                                        <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                         <input
                                             type="text"
                                             placeholder="Search for courses, mentors, or topics..."
-                                            className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:border-transparent text-sm sm:text-base text-gray-700 placeholder-gray-400"
+                                            className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-white border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-sm sm:text-base text-gray-700 placeholder-gray-400 transition-all"
                                             autoFocus
                                         />
                                     </div>
-                                    <button className="md:hidden px-5 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition-all duration-200 font-medium whitespace-nowrap">
-                                        Search
-                                    </button>
-                                    <button className="hidden md:block px-6 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-all duration-200 font-medium">
-                                        Search
-                                    </button>
+                                    <div className="flex gap-3">
+                                        <button className="flex-1 sm:flex-none px-6 py-3.5 sm:py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-all duration-200 font-medium whitespace-nowrap shadow-sm">
+                                            Search
+                                        </button>
+                                        <SheetClose asChild>
+                                            <button className="px-6 py-3.5 sm:py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-100 transition-all duration-200 font-medium whitespace-nowrap shadow-sm">
+                                                Cancel
+                                            </button>
+                                        </SheetClose>
+                                    </div>
                                 </div>
                             </div>
                         </SheetContent>
