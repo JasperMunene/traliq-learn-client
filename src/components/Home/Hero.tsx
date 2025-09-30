@@ -3,7 +3,8 @@ import Image from "next/image";
 
 export default function HeroSection() {
     return (
-        <section className="bg-gray-50 px-4 sm:px-6 py-12 sm:py-16">
+        <section className="bg-gray-50 w-full overflow-x-hidden">
+            <div className="px-4 sm:px-6 py-12 sm:py-16">
             <div className="max-w-7xl mx-auto">
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                     {/* Left Content */}
@@ -60,7 +61,7 @@ export default function HeroSection() {
                     {/* Right Content - Cards */}
                     <div className="space-y-4 order-1 lg:order-2">
                         {/* Top Card - AI Course */}
-                        <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 h-64 sm:h-72 lg:h-80 group">
+                        <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 h-80 sm:h-96 lg:h-[28rem] group">
                             <div className="absolute top-3 left-3 z-10">
                                 <span className="bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-1 rounded-full text-xs font-medium shadow-sm">
                                     Bestseller
@@ -102,19 +103,22 @@ export default function HeroSection() {
 
                         <div className="grid grid-cols-2 gap-4">
                             {/* Bottom Left Card - Community Video */}
-                            <div className="bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 aspect-square">
+                            <div className="relative bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 aspect-[3/4] group">
                                 <video
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                                     autoPlay
                                     loop
                                     muted
                                     playsInline
+                                    style={{ objectPosition: 'center center' }}
                                 >
                                     <source
                                         src="https://cdn.prod.website-files.com/667f8fd8b0d0df360cabad8d%2F66bae7f4cf5ced4e81109f66_home-hero-video-media-transcode.webm"
                                         type="video/webm"
                                     />
                                 </video>
+                                {/* Subtle overlay for better visual integration */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 pointer-events-none"></div>
                             </div>
 
 
@@ -155,6 +159,7 @@ export default function HeroSection() {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
     );

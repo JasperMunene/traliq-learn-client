@@ -41,9 +41,9 @@ export default function Footer() {
 
     return (
         <footer className="bg-gray-900 text-white">
-            <div className="max-w-7xl mx-auto px-6 py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
                 {/* Main Footer Content */}
-                <div className="grid lg:grid-cols-6 gap-8 mb-12">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
                     {/* Brand Column */}
                     <div className="lg:col-span-2">
                         <div className="mb-6">
@@ -130,13 +130,13 @@ export default function Footer() {
                 </div>
 
                 {/* Newsletter Signup */}
-                <div className="bg-gray-800 rounded-2xl p-8 mb-12">
+                <div className="bg-gray-800 rounded-2xl p-6 sm:p-8 mb-12">
                     <div className="max-w-md mx-auto text-center">
                         <h3 className="text-xl font-bold mb-2">Stay Updated</h3>
                         <p className="text-gray-400 mb-6">
                             Get the latest AI insights, course updates, and industry news delivered to your inbox.
                         </p>
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
                             <input
                                 type="email"
                                 placeholder="Enter your email"
