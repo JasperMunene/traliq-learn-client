@@ -53,8 +53,9 @@ interface SessionStatus {
 }
 
 interface UserData {
-    name?: string;
-    email?: string;
+    first_name: string;
+    last_name: string;
+    email: string;
     id?: string;
 }
 
@@ -126,7 +127,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
                 hasVideo: isVideoEnabled,
                 hasAudio: isAudioEnabled,
                 isTutor: true,
-                name: user?.name || 'Tutor'
+                name: user ? `${user.first_name} ${user.last_name}`.trim() : 'Tutor'
             });
         } else {
             // Find tutor in remote users
@@ -152,7 +153,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
                 uid: sessionData.uid,
                 hasVideo: isVideoEnabled,
                 hasAudio: isAudioEnabled,
-                name: user?.name || 'You',
+                name: user ? `${user.first_name} ${user.last_name}`.trim() : 'You',
                 isHandRaised: isHandRaised
             });
         }
@@ -240,7 +241,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
         setIsHandRaised(!isHandRaised);
         const message: Message = {
             user: 'System',
-            text: isHandRaised ? `${user?.name || 'Student'} lowered their hand` : `${user?.name || 'Student'} raised their hand`,
+            text: isHandRaised ? `${user ? user.first_name : 'Student'} lowered their hand` : `${user ? user.first_name : 'Student'} raised their hand`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             isSystemMessage: true
         };
@@ -250,7 +251,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
     const handleSendMessage = () => {
         if (chatMessage.trim()) {
             const newMessage: Message = {
-                user: user?.name || "You",
+                user: user ? `${user.first_name} ${user.last_name}`.trim() : "You",
                 text: chatMessage.trim(),
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 isSystemMessage: false
@@ -381,7 +382,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
                                                         <UserCircle className="w-6 h-6 text-white" />
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-semibold">{isTutor ? user?.name || 'You (Tutor)' : 'Tutor'}</p>
+                                                        <p className="text-sm font-semibold">{isTutor ? (user ? `${user.first_name} ${user.last_name}`.trim() : 'You (Tutor)') : 'Tutor'}</p>
                                                         <p className="text-xs text-gray-600">Presenting</p>
                                                     </div>
                                                 </div>
@@ -571,11 +572,11 @@ export default function CourseLive({ courseId }: { courseId: string }) {
                                                                         <p className="text-xs text-gray-600">{msg.text}</p>
                                                                     </div>
                                                                 ) : (
-                                                                    <div className={`flex ${msg.user === (user?.name || 'You') ? 'justify-end' : 'justify-start'}`}>
-                                                                        <div className={`max-w-xs ${msg.user === (user?.name || 'You') ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'} rounded-xl p-3 shadow-sm border ${msg.user === (user?.name || 'You') ? 'border-gray-900' : 'border-gray-200'}`}>
-                                                                            <p className="text-xs font-medium mb-1 ${msg.user === (user?.name || 'You') ? 'text-gray-300' : 'text-gray-600'}">{msg.user}</p>
+                                                                    <div className={`flex ${msg.user === (user ? `${user.first_name} ${user.last_name}`.trim() : 'You') ? 'justify-end' : 'justify-start'}`}>
+                                                                        <div className={`max-w-xs ${msg.user === (user ? `${user.first_name} ${user.last_name}`.trim() : 'You') ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'} rounded-xl p-3 shadow-sm border ${msg.user === (user ? `${user.first_name} ${user.last_name}`.trim() : 'You') ? 'border-gray-900' : 'border-gray-200'}`}>
+                                                                            <p className="text-xs font-medium mb-1 ${msg.user === (user ? `${user.first_name} ${user.last_name}`.trim() : 'You') ? 'text-gray-300' : 'text-gray-600'}">{msg.user}</p>
                                                                             <p className="text-sm">{msg.text}</p>
-                                                                            <p className="text-xs mt-1 ${msg.user === (user?.name || 'You') ? 'text-gray-400' : 'text-gray-500'}">{msg.time}</p>
+                                                                            <p className="text-xs mt-1 ${msg.user === (user ? `${user.first_name} ${user.last_name}`.trim() : 'You') ? 'text-gray-400' : 'text-gray-500'}">{msg.time}</p>
                                                                         </div>
                                                                     </div>
                                                                 )}

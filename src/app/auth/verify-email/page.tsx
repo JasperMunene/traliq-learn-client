@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthLayout } from '../AuthLayout';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ interface ErrorResponse {
     error: string;
 }
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
     const [code, setCode] = useState(['', '', '', '', '', '']);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -383,5 +383,13 @@ export default function VerifyEmailPage() {
                 </p>
             </div>
         </AuthLayout>
+    );
+}
+
+export default function VerifyEmailPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-600">Loading...</div></div>}>
+            <VerifyEmailContent />
+        </Suspense>
     );
 }

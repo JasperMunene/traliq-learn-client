@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthLayout } from '../AuthLayout';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,7 @@ interface ErrorResponse {
     error: string;
 }
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
     const [formData, setFormData] = useState({
         password: '',
         confirmPassword: ''
@@ -380,5 +380,13 @@ export default function ResetPasswordPage() {
                 </div>
             </div>
         </AuthLayout>
+    );
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-600">Loading...</div></div>}>
+            <ResetPasswordContent />
+        </Suspense>
     );
 }
