@@ -28,11 +28,21 @@ export default function OnboardingPage() {
         const fetchUserRole = async () => {
             try {
                 setLoading(true);
+                setError(null);
+                
                 const response = await fetchWithAuth('http://16.171.54.227:5000/api/users/me');
+                
                 if (!response.ok) {
-                    if (response.status === 401) setError('Authentication failed');
-                    else if (response.status === 404) setError('User not found');
-                    else setError('Failed to fetch user data');
+                    if (response.status === 401) {
+                        setError('Authentication failed. Please log in again.');
+                        // Redirect to login after a short delay
+                        setTimeout(() => router.push('/auth/login'), 2000);
+                    } else if (response.status === 404) {
+                        setError('User not found');
+                    } else {
+                        const errorData = await response.json().catch(() => ({}));
+                        setError(errorData.error || 'Failed to fetch user data');
+                    }
                     setLoading(false);
                     return;
                 }
@@ -47,7 +57,8 @@ export default function OnboardingPage() {
                 setLoading(false);
             } catch (err) {
                 console.error('Error checking user role:', err);
-                setError('Failed to connect to server');
+                const errorMessage = err instanceof Error ? err.message : 'Failed to connect to server';
+                setError(errorMessage);
                 setLoading(false);
             }
         };
@@ -58,14 +69,15 @@ export default function OnboardingPage() {
     const updateUserRole = async (role: 'tutor' | 'learner') => {
         try {
             setUpdating(true);
+            setError(null);
             const response = await fetchWithAuth('http://16.171.54.227:5000/api/users/me/role', {
                 method: 'POST',
                 body: JSON.stringify({ role }),
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to update role');
+                const errorData = await response.json().catch(() => ({ message: 'Failed to update role' }));
+                throw new Error(errorData.message || errorData.error || 'Failed to update role');
             }
 
             return true;
@@ -107,12 +119,24 @@ export default function OnboardingPage() {
                     <div className="bg-red-50 border border-red-200 rounded-lg p-6">
                         <h2 className="text-xl font-bold text-red-800 mb-2">Error</h2>
                         <p className="text-red-600 mb-4">{error}</p>
-                        <button
-                            onClick={() => window.location.reload()}
-                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-                        >
-                            Try Again
-                        </button>
+                        <div className="flex gap-3 justify-center">
+                            <button
+                                onClick={() => {
+                                    setError(null);
+                                    setLoading(true);
+                                    window.location.reload();
+                                }}
+                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                            >
+                                Try Again
+                            </button>
+                            <button
+                                onClick={() => router.push('/auth/login')}
+                                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+                            >
+                                Back to Login
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
