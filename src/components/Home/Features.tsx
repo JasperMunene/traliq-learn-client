@@ -8,12 +8,10 @@ export default function FeaturesSection() {
                 {/* Header - Centered */}
                 <div className="text-center mb-16 lg:mb-20">
                     <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight mb-4 max-w-7xl">
-                        Seamless Learning,
-                        Anywhere, Anytime
+                        Learn AI Live—Keep the Replay Forever
                     </h2>
-                    <p className="text-gray-500 text-base lg:text-lg leading-relaxed max-w-lg mx-auto">
-                        We prioritize flexibility, ensuring that you have the freedom to
-                        learn at your own pace, at any time that suits your schedule.
+                    <p className="text-gray-600 text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
+                        Join interactive, expert-led AI webinars in real time with Q&A sessions. Miss a class? No problem—every live session is recorded and yours to watch anytime, forever. Reserve your seat today.
                     </p>
                 </div>
 
@@ -43,11 +41,10 @@ export default function FeaturesSection() {
                                 </div>
                                 <div className="space-y-2">
                                     <h3 className="text-xl lg:text-2xl font-bold text-gray-900">
-                                        Pioneering Education
+                                        Lifetime Replay Access Included
                                     </h3>
                                     <p className="text-gray-600 text-sm lg:text-base leading-relaxed">
-                                        Our courses are designed to deliver the latest insights and skills
-                                        demanded by today&apos;s dynamic world.
+                                        Every live AI class automatically becomes yours forever. Watch replays anytime on any device. One payment, infinite access—no subscriptions, no expiration.
                                     </p>
                                 </div>
                             </div>
@@ -63,11 +60,10 @@ export default function FeaturesSection() {
                                 </div>
                                 <div className="space-y-2">
                                     <h3 className="text-xl lg:text-2xl font-bold text-gray-900">
-                                        Cultivating Engagement
+                                        Real-Time Q&A with Experts
                                     </h3>
                                     <p className="text-gray-600 text-sm lg:text-base leading-relaxed">
-                                        Immerse yourself in an interactive learning environment where
-                                        active participation and hands-on drive understanding.
+                                        Ask questions directly during live sessions. Get instant answers from industry practitioners. No more waiting days for email responses—clarify doubts immediately and accelerate your learning.
                                     </p>
                                 </div>
                             </div>
@@ -83,11 +79,10 @@ export default function FeaturesSection() {
                                 </div>
                                 <div className="space-y-2">
                                     <h3 className="text-xl lg:text-2xl font-bold text-gray-900">
-                                        Building Connections
+                                        Network with 50,000+ AI Professionals
                                     </h3>
                                     <p className="text-gray-600 text-sm lg:text-base leading-relaxed">
-                                        Engage in discussions, forge valuable connections, and benefit
-                                        from the collective expertise of our dedicated community.
+                                        Connect with peers during live sessions, join our global community forums, and build relationships that advance your AI career. Learn from others&apos; questions and experiences.
                                     </p>
                                 </div>
                             </div>

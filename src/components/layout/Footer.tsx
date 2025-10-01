@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
     const navigation = {
@@ -47,7 +48,7 @@ export default function Footer() {
                     {/* Brand Column */}
                     <div className="lg:col-span-2">
                         <div className="mb-6">
-                            <span className="text-2xl font-bold text-white">Traliq AI</span>
+                            <Image src="/logo2.png" alt="Logo" width={160} height={160} />
                         </div>
                         <p className="text-gray-400 mb-6 leading-relaxed">
                             Empowering professionals with cutting-edge AI education.

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator';
 import { AlertCircle, CheckCircle, Eye, EyeOff, Lock, Loader } from 'lucide-react';
+import { API_ENDPOINTS } from '@/lib/config';
 
 
 interface ErrorResponse {
@@ -43,7 +44,7 @@ function ResetPasswordContent() {
 
     const verifyResetToken = async (token: string) => {
         try {
-            const response = await fetch('http://127.0.0.1:5000/auth/verify-reset-token', {
+            const response = await fetch(API_ENDPOINTS.auth.verifyResetToken, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +118,7 @@ function ResetPasswordContent() {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/auth/reset-password', {
+            const response = await fetch(API_ENDPOINTS.auth.resetPassword, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,124 +1,75 @@
-import { Check, ArrowUpRight } from "lucide-react";
+import { Check, Infinity } from "lucide-react";
+import Link from "next/link";
 
 export default function PricingSection() {
-    const plans = [
+    const options = [
         {
-            name: "Starter",
-            price: "KES 2900",
-            period: "/month",
-            description: "Perfect for beginners exploring AI fundamentals",
+            name: "Live Sessions",
+            priceRange: "KES 3,000 - 15,000",
+            description: "Join live AI webinars with expert instructors",
             features: [
-                "Access to 5 beginner courses",
-                "Community forum access",
-                "Basic progress tracking",
+                "Interactive Q&A with experts",
+                "Network with peers",
                 "Certificate of completion",
-                "Email support"
+                "Lifetime replay access",
+                "Course materials included"
             ],
-            popular: false,
-            buttonText: "Start Learning"
+            cta: "Browse Live Sessions",
+            href: "/dashboard/courses"
         },
         {
-            name: "Professional",
-            price: "KES 7900",
-            period: "/month",
-            description: "Ideal for professionals advancing their AI skills",
+            name: "On-Demand Courses",
+            priceRange: "KES 2,500 - 12,000",
+            description: "Learn at your own pace with recorded content",
             features: [
-                "Access to all 50+ courses",
-                "1-on-1 mentor sessions (2/month)",
-                "Advanced project portfolio",
-                "Priority community support",
-                "Industry certification",
-                "Career placement assistance",
-                "Offline video downloads"
+                "Start learning immediately",
+                "Learn on your schedule",
+                "Certificate of completion",
+                "Lifetime course access",
+                "Download course materials"
             ],
-            popular: true,
-            buttonText: "Go Professional"
-        },
-        {
-            name: "Enterprise",
-            price: "KES 19900",
-            period: "/month",
-            description: "Comprehensive solution for teams and organizations",
-            features: [
-                "Everything in Professional",
-                "Custom learning paths",
-                "Team analytics dashboard",
-                "Dedicated account manager",
-                "Custom workshops",
-                "API integration",
-                "24/7 priority support"
-            ],
-            popular: false,
-            buttonText: "Contact Sales"
+            cta: "Browse Courses",
+            href: "/dashboard/courses"
         }
     ];
 
     return (
-        <section className="bg-white px-6 py-16 lg:py-20">
-            <div className="max-w-7xl mx-auto">
+        <section id="pricing" className="bg-white px-6 py-20 lg:py-28">
+            <div className="max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
-                        Choose Your Learning Journey
+                <div className="text-center mb-20">
+                    <h2 className="text-4xl lg:text-5xl font-semibold tracking-tight text-gray-900 mb-4">
+                        Simple Pricing
                     </h2>
-                    <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-                        Flexible pricing plans designed to scale with your AI learning goals and career ambitions
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Pay per course. No subscriptions. Own your learning forever.
                     </p>
                 </div>
 
-                {/* Pricing Cards */}
-                <div className="grid lg:grid-cols-3 gap-8 mb-12">
-                    {plans.map((plan, index) => (
-                        <div key={index} className={`rounded-2xl p-8 relative ${
-                            plan.popular
-                                ? 'bg-gray-900 text-white shadow-xl scale-105'
-                                : 'bg-gray-50 hover:shadow-lg transition-shadow duration-300'
-                        }`}>
-                            {/* Popular Badge */}
-                            {plan.popular && (
-                                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                                    <span className="bg-blue-400 text-white px-4 py-1 rounded-full text-sm font-medium">
-                                        Most Popular
-                                    </span>
-                                </div>
-                            )}
-
-                            {/* Plan Header */}
-                            <div className="text-center mb-8">
-                                <h3 className={`text-2xl font-bold mb-2 ${
-                                    plan.popular ? 'text-white' : 'text-gray-900'
-                                }`}>
-                                    {plan.name}
+                {/* Pricing Options */}
+                <div className="grid md:grid-cols-2 gap-8 mb-16">
+                    {options.map((option, index) => (
+                        <div key={index} className="bg-white border border-gray-200 rounded-lg p-8 hover:border-gray-300 transition-colors">
+                            {/* Option Header */}
+                            <div className="mb-6">
+                                <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                                    {option.name}
                                 </h3>
-                                <p className={`text-sm mb-4 ${
-                                    plan.popular ? 'text-gray-300' : 'text-gray-600'
-                                }`}>
-                                    {plan.description}
+                                <p className="text-gray-600 text-sm mb-4">
+                                    {option.description}
                                 </p>
-                                <div className="flex items-baseline justify-center">
-                                    <span className={`text-5xl font-bold ${
-                                        plan.popular ? 'text-white' : 'text-gray-900'
-                                    }`}>
-                                        {plan.price}
-                                    </span>
-                                    <span className={`text-lg ml-1 ${
-                                        plan.popular ? 'text-gray-300' : 'text-gray-600'
-                                    }`}>
-                                        {plan.period}
-                                    </span>
+                                <div className="text-3xl font-semibold text-gray-900">
+                                    {option.priceRange}
                                 </div>
+                                <p className="text-sm text-gray-600 mt-1">per course</p>
                             </div>
 
                             {/* Features */}
-                            <ul className="space-y-4 mb-8">
-                                {plan.features.map((feature, featureIndex) => (
+                            <ul className="space-y-3 mb-8">
+                                {option.features.map((feature, featureIndex) => (
                                     <li key={featureIndex} className="flex items-start gap-3">
-                                        <Check className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                                            plan.popular ? 'text-blue-400' : 'text-blue-400'
-                                        }`} />
-                                        <span className={`text-sm ${
-                                            plan.popular ? 'text-gray-300' : 'text-gray-600'
-                                        }`}>
+                                        <Check className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                                        <span className="text-gray-600">
                                             {feature}
                                         </span>
                                     </li>
@@ -126,23 +77,24 @@ export default function PricingSection() {
                             </ul>
 
                             {/* CTA Button */}
-                            <button className={`w-full py-4 rounded-full font-medium flex items-center justify-center gap-2 transition-all duration-200 ${
-                                plan.popular
-                                    ? 'bg-white text-gray-900 hover:bg-gray-100'
-                                    : 'bg-gray-900 text-white hover:bg-gray-800'
-                            }`}>
-                                {plan.buttonText}
-                                <ArrowUpRight className="w-4 h-4" />
-                            </button>
+                            <Link
+                                href={option.href}
+                                className="w-full block text-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+                            >
+                                {option.cta}
+                            </Link>
                         </div>
                     ))}
                 </div>
 
-                {/* Money Back Guarantee */}
-                <div className="text-center">
-                    <p className="text-gray-600">
-                        <span className="font-medium">30-day money-back guarantee</span> •
-                        No setup fees • Cancel anytime
+                {/* Value Prop Box */}
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+                    <Infinity className="w-12 h-12 text-gray-900 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                        Own Your Learning, Forever
+                    </h3>
+                    <p className="text-gray-600 max-w-2xl mx-auto">
+                        Every course you purchase includes lifetime access. Watch anytime, anywhere, as many times as you want. No subscriptions, no recurring fees—just pay once and learn forever.
                     </p>
                 </div>
             </div>

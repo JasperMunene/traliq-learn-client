@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AlertCircle, CheckCircle, Mail, ArrowLeft, Loader } from 'lucide-react';
+import { API_ENDPOINTS } from '@/lib/config';
 
 // Interface for the API response
 interface ForgotPasswordResponse {
@@ -46,7 +47,7 @@ export default function ForgotPasswordPage() {
         }
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/auth/forgot-password', {
+            const response = await fetch(API_ENDPOINTS.auth.forgotPassword, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import { getAccessToken, getRefreshToken, setTokens, removeTokens } from './cookies';
 import { isTokenExpired, getTimeUntilExpiration } from './jwt';
+import { API_BASE_URL } from './config';
 
 /**
  * Token refresh state management
@@ -30,7 +31,7 @@ const refreshToken = async (): Promise<string | null> => {
     refreshPromise = (async () => {
         try {
             console.log('Refreshing access token...');
-            const response = await fetch('http://127.0.0.1:5000/auth/refresh-token', {
+            const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

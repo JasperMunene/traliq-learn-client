@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator';
 import { Mail, User, Lock, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { API_ENDPOINTS } from '@/lib/config';
 
 // Interface for the API response
 interface SignupResponse {
@@ -99,7 +100,7 @@ export default function SignupPage() {
 
         try {
             // Make API call to your Flask backend
-            const response = await fetch('http://127.0.0.1:5000/auth/signup', {
+            const response = await fetch(API_ENDPOINTS.auth.signup, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +143,7 @@ export default function SignupPage() {
         setIsGoogleLoading(true);
         try {
             // Redirect to your backend Google OAuth endpoint
-            window.location.href = 'http://127.0.0.1:5000/auth/google';
+            window.location.href = API_ENDPOINTS.auth.googleOAuth;
         } catch (error) {
             console.error('Google login failed:', error);
             setErrors({ general: 'Google login failed. Please try again.' });

@@ -3,36 +3,45 @@ import Image from "next/image";
 
 export default function HeroSection() {
     return (
-        <section className="bg-gray-50 w-full overflow-x-hidden">
-            <div className="px-4 sm:px-6 py-12 sm:py-16">
-            <div className="max-w-7xl mx-auto">
+        <section className="bg-white w-full overflow-x-hidden">
+            <div className="px-4 sm:px-6 py-20 sm:py-28">
+            <div className="max-w-6xl mx-auto">
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                     {/* Left Content */}
                     <div className="space-y-6 sm:space-y-8">
                         {/* Main Heading */}
                         <div className="space-y-4">
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                                Master AI with Industry-Leading Experts
-                                <span className="inline-block ml-2">
-                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-purple-200 rounded-xl"></div>
-                                </span>
+                            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight text-gray-900 leading-tight">
+                                Learn AI from Industry Experts
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="text-base sm:text-lg text-gray-600 max-w-md leading-relaxed">
-                                Transform your career with <span className="text-blue-500">practical AI skills</span>.
-                                Learn from world-class practitioners and build real-world projects that matter.
+                            <p className="text-lg sm:text-xl text-gray-600 max-w-2xl leading-relaxed">
+                                Join live AI sessions or learn at your own pace. Pay per course, own it forever. No subscriptions.
                             </p>
+                            
+                            {/* Stats */}
+                            <div className="flex flex-wrap gap-6 pt-4 text-sm text-gray-600">
+                                <div>
+                                    <span className="font-semibold text-gray-900">50K+</span> learners
+                                </div>
+                                <div>
+                                    <span className="font-semibold text-gray-900">12.5K+</span> live classes
+                                </div>
+                                <div>
+                                    <span className="font-semibold text-gray-900">4.9/5</span> rating
+                                </div>
+                            </div>
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex flex-wrap gap-3 sm:gap-4">
-                            <button className="bg-gray-900 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full hover:bg-gray-800 transition-all duration-200 font-medium text-sm sm:text-base">
+                        <div className="flex flex-wrap gap-4 pt-4">
+                            <a href="#courses" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
                                 Browse Courses
-                            </button>
-                            <button className="text-gray-700 px-6 sm:px-8 py-3 sm:py-4 rounded-full border border-gray-300 hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 font-medium text-sm sm:text-base">
-                                Become a Tutor
-                            </button>
+                            </a>
+                            <a href="#pricing" className="bg-gray-100 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">
+                                View Pricing
+                            </a>
                         </div>
 
                         {/* Divider */}
@@ -82,7 +91,7 @@ export default function HeroSection() {
                                     height={500}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                                <div className="absolute inset-0 bg-black/40"></div>
 
                                 <div className="absolute bottom-3 left-3 right-12">
                                     <h3 className="text-white text-sm sm:text-base lg:text-lg font-semibold mb-0.5 leading-tight">
@@ -94,7 +103,7 @@ export default function HeroSection() {
                                 </div>
                                 {/* AI Badge */}
                                 <div className="absolute bottom-3 right-3">
-                                    <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-md text-xs font-semibold shadow-sm">
+                                    <div className="bg-orange-500 text-white px-2 py-1 rounded-md text-xs font-semibold shadow-sm">
                                         AI
                                     </div>
                                 </div>
@@ -103,7 +112,7 @@ export default function HeroSection() {
 
                         <div className="grid grid-cols-2 gap-4">
                             {/* Bottom Left Card - Community Video */}
-                            <div className="relative bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 aspect-[3/4] group">
+                            <div className="relative bg-blue-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 aspect-[3/4] group">
                                 <video
                                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                                     autoPlay
@@ -118,7 +127,7 @@ export default function HeroSection() {
                                     />
                                 </video>
                                 {/* Subtle overlay for better visual integration */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 pointer-events-none"></div>
+                                <div className="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
                             </div>
 
 

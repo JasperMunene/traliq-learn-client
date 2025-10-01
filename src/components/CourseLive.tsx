@@ -20,6 +20,7 @@ import {
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { fetchWithAuth } from '@/lib/api';
+import { API_ENDPOINTS } from '@/lib/config';
 
 interface SessionData {
     appId: string;
@@ -89,7 +90,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
 
     const checkSessionStatus = useCallback(async () => {
         try {
-            const res = await fetchWithAuth(`http://127.0.0.1:5000/courses/${courseId}/session-status`);
+            const res = await fetchWithAuth(API_ENDPOINTS.courses.sessionStatus(courseId));
             if (res.ok) {
                 const data = await res.json();
                 setSessionStatus(data);
@@ -187,7 +188,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
         setError(null);
 
         try {
-            const res = await fetchWithAuth(`http://127.0.0.1:5000/courses/${courseId}/join`, {
+            const res = await fetchWithAuth(API_ENDPOINTS.courses.join(courseId), {
                 method: "POST",
             });
 
@@ -221,7 +222,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
     const handleLeaveSession = async () => {
         setIsLoading(true);
         try {
-            await fetchWithAuth(`http://127.0.0.1:5000/courses/${courseId}/leave`, {
+            await fetchWithAuth(API_ENDPOINTS.courses.leave(courseId), {
                 method: "POST",
             });
 

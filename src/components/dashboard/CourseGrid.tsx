@@ -1,215 +1,170 @@
-import { Clock, Users, Star, Play, CircleCheck as CheckCircle } from "lucide-react";
+import { Clock, Users, Star, Play, CircleCheck as CheckCircle, BookOpen } from "lucide-react";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { fetchWithAuth } from "@/lib/api";
+import Link from "next/link";
+
+interface Course {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    level: string;
+    price: number;
+    currency: string;
+    is_free: boolean;
+    thumbnail_url: string | null;
+    tutor: {
+        id: string;
+        first_name: string;
+        last_name: string;
+        avatar_url: string | null;
+    };
+    attendee_count: number;
+}
 
 export default function CourseGrid() {
-    const enrolledCourses = [
-        {
-            title: "Machine Learning Fundamentals",
-            instructor: "Dr. Sarah Chen",
-            progress: 75,
-            duration: "12 weeks",
-            students: "2,847",
-            rating: "4.9",
-            image: "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800",
-            status: "in-progress",
-            nextLesson: "Neural Networks Basics"
-        },
-        {
-            title: "Deep Learning with PyTorch",
-            instructor: "Alex Rodriguez",
-            progress: 45,
-            duration: "16 weeks",
-            students: "1,934",
-            rating: "4.8",
-            image: "https://images.pexels.com/photos/8386434/pexels-photo-8386434.jpeg?auto=compress&cs=tinysrgb&w=800",
-            status: "in-progress",
-            nextLesson: "Convolutional Neural Networks"
-        },
-        {
-            title: "Natural Language Processing",
-            instructor: "Prof. Michael Kim",
-            progress: 100,
-            duration: "10 weeks",
-            students: "3,156",
-            rating: "4.9",
-            image: "https://images.pexels.com/photos/8386422/pexels-photo-8386422.jpeg?auto=compress&cs=tinysrgb&w=800",
-            status: "completed",
-            completedDate: "March 15, 2025"
-        },
-        {
-            title: "Computer Vision Applications",
-            instructor: "Lisa Zhang",
-            progress: 20,
-            duration: "14 weeks",
-            students: "1,679",
-            rating: "4.7",
-            image: "https://images.pexels.com/photos/8386435/pexels-photo-8386435.jpeg?auto=compress&cs=tinysrgb&w=800",
-            status: "in-progress",
-            nextLesson: "Image Processing Fundamentals"
-        }
-    ];
+    const [courses, setCourses] = useState<Course[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const availableCourses = [
-        {
-            title: "AI Ethics & Responsible AI",
-            instructor: "Dr. James Wilson",
-            duration: "6 weeks",
-            students: "4,203",
-            rating: "4.8",
-            price: "KES 199",
-            image: "https://images.pexels.com/photos/8386433/pexels-photo-8386433.jpeg?auto=compress&cs=tinysrgb&w=800",
-            level: "All Levels"
-        },
-        {
-            title: "AI for Business Strategy",
-            instructor: "Emma Thompson",
-            duration: "8 weeks",
-            students: "2,567",
-            rating: "4.9",
-            price: "$279",
-            image: "https://images.pexels.com/photos/8386437/pexels-photo-8386437.jpeg?auto=compress&cs=tinysrgb&w=800",
-            level: "Beginner"
+    useEffect(() => {
+        fetchCourses();
+    }, []);
+
+    const fetchCourses = async () => {
+        try {
+            setLoading(true);
+            
+            // Fetch all courses
+            const coursesResponse = await fetchWithAuth('http://16.171.54.227:5000/courses');
+            
+            if (coursesResponse.ok) {
+                const coursesData = await coursesResponse.json();
+                setCourses(coursesData.courses || []);
+            } else {
+                setError('Failed to load courses');
+            }
+        } catch (err) {
+            console.error('Error fetching courses:', err);
+            setError('Failed to load courses');
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
+
+    const getDefaultThumbnail = (index: number) => {
+        const thumbnails = [
+            "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400",
+            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400",
+            "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400",
+            "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400",
+            "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=400"
+        ];
+        return thumbnails[index % thumbnails.length];
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading courses...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">{error}</p>
+                    <button 
+                        onClick={fetchCourses}
+                        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-8">
-            {/* Enrolled Courses */}
+            {/* All Courses */}
+            {courses.length > 0 ? (
             <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">My Courses</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">All Courses</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {enrolledCourses.map((course, index) => (
-                        <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
+                    {courses.map((course, index) => (
+                        <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
                             <div className="relative h-40">
                                 <Image
-                                    src={course.image}
+                                    src={course.thumbnail_url || getDefaultThumbnail(index)}
                                     alt={course.title}
                                     width={500}
                                     height={500}
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute top-3 left-3">
-                                    {course.status === 'completed' ? (
-                                        <span className="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                      <CheckCircle className="w-3 h-3" />
-                      Completed
-                    </span>
-                                    ) : (
-                                        <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-medium">
-                      In Progress
-                    </span>
-                                    )}
+                                    <span className="bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-1 rounded-full text-xs font-medium">
+                                        {course.level}
+                                    </span>
                                 </div>
-                                <div className="absolute top-3 right-3">
-                                    <button className="w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white hover:scale-110 transition-all duration-300">
-                                        <Play className="w-4 h-4 text-gray-600" />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="p-5 flex flex-col flex-1">
-                                <h3 className="text-lg font-bold text-gray-900 mb-2 flex-1">{course.title}</h3>
-                                <p className="text-gray-600 text-sm mb-4">by {course.instructor}</p>
-
-                                {course.status === 'completed' ? (
-                                    <div className="mb-4">
-                                        <p className="text-sm text-green-600 font-medium">
-                                            ✓ Completed on {course.completedDate}
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <div className="mb-4">
-                                        <div className="flex justify-between text-sm text-gray-600 mb-2">
-                                            <span>Progress</span>
-                                            <span>{course.progress}%</span>
-                                        </div>
-                                        <div className="w-full bg-gray-200 rounded-full h-2">
-                                            <div
-                                                className="bg-blue-400 h-2 rounded-full transition-all duration-300"
-                                                style={{ width: `${course.progress}%` }}
-                                            ></div>
-                                        </div>
-                                        <p className="text-sm text-gray-600 mt-2">
-                                            Next: {course.nextLesson}
-                                        </p>
+                                {course.is_free && (
+                                    <div className="absolute top-3 right-3">
+                                        <span className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold">
+                                            FREE
+                                        </span>
                                     </div>
                                 )}
-
-                                <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                                    <div className="flex items-center gap-1">
-                                        <Clock className="w-4 h-4" />
-                                        <span>{course.duration}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <Users className="w-4 h-4" />
-                                        <span>{course.students}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                        <span>{course.rating}</span>
-                                    </div>
-                                </div>
-
-                                <button className="w-full bg-gray-900 text-white py-2.5 rounded-lg hover:bg-gray-800 transition-colors duration-200 font-medium text-sm mt-auto">
-                                    {course.status === 'completed' ? 'Review Course' : 'Continue Learning'}
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Available Courses */}
-            <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Recommended for You</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {availableCourses.map((course, index) => (
-                        <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
-                            <div className="relative h-40">
-                                <Image
-                                    src={course.image}
-                                    alt={course.title}
-                                    width={500}
-                                    height={500}
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute top-3 left-3">
-                  <span className="bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-1 rounded-full text-xs font-medium">
-                    {course.level}
-                  </span>
-                                </div>
                             </div>
 
                             <div className="p-5 flex flex-col flex-1">
-                                <h3 className="text-lg font-bold text-gray-900 mb-2 flex-1">{course.title}</h3>
-                                <p className="text-gray-600 text-sm mb-4">by {course.instructor}</p>
+                                <h3 className="text-lg font-bold text-gray-900 mb-2 flex-1 line-clamp-2">{course.title}</h3>
+                                <p className="text-gray-600 text-sm mb-4">by {course.tutor.first_name} {course.tutor.last_name}</p>
 
                                 <div className="flex items-center justify-between text-xs text-gray-500 mb-6">
                                     <div className="flex items-center gap-1">
-                                        <Clock className="w-4 h-4" />
-                                        <span>{course.duration}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
                                         <Users className="w-4 h-4" />
-                                        <span>{course.students}</span>
+                                        <span>{course.attendee_count || 0} students</span>
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                                        <span>{course.rating}</span>
+                                    <div className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                                        {course.category}
                                     </div>
                                 </div>
 
                                 <div className="flex items-center justify-between mt-auto">
-                                    <span className="text-2xl font-bold text-gray-900">{course.price}</span>
-                                    <button className="bg-gray-900 text-white px-5 py-2.5 rounded-lg hover:bg-gray-800 transition-colors duration-200 text-sm font-medium">
-                                        Enroll Now
+                                    <span className="text-2xl font-bold text-gray-900">
+                                        {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
+                                    </span>
+                                    <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
+                                        View Course
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>
+            ) : (
+            /* Empty State */
+                <div className="text-center py-16">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <BookOpen className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">No courses found</h3>
+                    <p className="text-gray-600 mb-6">Start your learning journey by exploring our courses</p>
+                    <Link
+                        href="/dashboard"
+                        className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                        Explore Courses
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }

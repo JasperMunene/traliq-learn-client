@@ -9,17 +9,18 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
+import Image from "next/image";
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
 
     return (
-        <nav className="bg-gray-50 px-4 sm:px-6 py-4">
+        <nav className="bg-gray-50 px-4 sm:px-6 py-3">
             <div className="flex items-center justify-between max-w-7xl mx-auto">
                 {/* Logo */}
                 <div className="flex items-center">
-                    <span className="text-xl sm:text-2xl font-bold text-black font-sans">Traliq AI</span>
+                    <Image src="/logo.png" alt="Logo" width={160} height={160} />
                 </div>
 
                 {/* Navigation Links - Desktop */}
