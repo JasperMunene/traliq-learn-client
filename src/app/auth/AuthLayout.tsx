@@ -39,7 +39,12 @@ export function AuthLayout({
                     {/* Top Section - Logo */}
                     <div>
                         <div className="inline-flex items-center">
-                            <span className="text-3xl font-bold text-white font-poppins drop-shadow-sm">Traliq AI</span>
+                            <Image
+                                src="/logo2.png"
+                                alt="Logo"
+                                width={100}
+                                height={100}
+                            />
                         </div>
                     </div>
 
@@ -113,7 +118,12 @@ export function AuthLayout({
                     <div className="mb-8">
                         <div className="flex items-center justify-between mb-8 lg:hidden">
                             <div className="inline-flex items-center">
-                                <span className="text-2xl font-bold text-black font-poppins">Traliq AI</span>
+                               <Image
+                                src="/logo.png"
+                                alt="Logo"
+                                width={100}
+                                height={100}
+                            />
                             </div>
                         </div>
 
