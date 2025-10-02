@@ -125,7 +125,7 @@ export default function SingleCoursePage() {
 
     const fetchCurrentUser = async () => {
         try {
-            const response = await fetchWithAuth('http://localhost:5000/api/users/me');
+            const response = await fetchWithAuth('https://api.traliq.com/api/users/me');
             if (response.ok) {
                 const userData = await response.json();
                 setCurrentUser(userData);
@@ -138,7 +138,7 @@ export default function SingleCoursePage() {
     const fetchCourseDetails = async () => {
         try {
             setLoading(true);
-            const response = await fetchWithAuth(`http://localhost:5000/courses/${courseId}`);
+            const response = await fetchWithAuth(`https://api.traliq.com/courses/${courseId}`);
             
             if (response.ok) {
                 const data = await response.json();
@@ -157,7 +157,7 @@ export default function SingleCoursePage() {
     const checkEnrollmentStatus = async () => {
         try {
             // Check if user is enrolled in this course
-            const response = await fetchWithAuth('http://localhost:5000/users/me/enrollments');
+            const response = await fetchWithAuth('https://api.traliq.com/users/me/enrollments');
             if (response.ok) {
                 const data = await response.json();
                 const enrollments = data.enrollments || [];
@@ -185,7 +185,7 @@ export default function SingleCoursePage() {
             if (course.is_free) {
                 // Free course - direct enrollment
                 const response = await fetchWithAuth(
-                    `http://localhost:5000/courses/${course.id}/enroll`,
+                    `https://api.traliq.com/courses/${course.id}/enroll`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' }
@@ -204,7 +204,7 @@ export default function SingleCoursePage() {
             } else {
                 // Paid course - initialize payment
                 const response = await fetchWithAuth(
-                    'http://localhost:5000/api/payments/initialize',
+                    'https://api.traliq.com/api/payments/initialize',
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -392,13 +392,13 @@ export default function SingleCoursePage() {
                 <main className="flex-1 lg:ml-64">
                     {/* Back to Courses Link */}
                     <div className="bg-gradient-to-r from-purple-600 to-blue-600">
-                        <div className="max-w-7xl mx-auto px-4 py-3">
+                        <div className="max-w-7xl mx-auto px-4 py-2.5 sm:py-3">
                             <button
                                 onClick={() => router.push('/dashboard')}
-                                className="flex items-center gap-2 text-white hover:text-purple-100 transition-colors font-medium"
+                                className="flex items-center gap-1.5 sm:gap-2 text-white hover:text-purple-100 transition-colors font-medium text-sm sm:text-base"
                             >
                                 <ArrowLeft className="w-4 h-4" />
-                                Back to Courses
+                                <span>Back to Courses</span>
                             </button>
                         </div>
                     </div>
@@ -466,46 +466,46 @@ export default function SingleCoursePage() {
 
                     {/* Main Content */}
                     <div className="bg-gradient-to-b from-gray-50 to-white">
-                        <div className="max-w-7xl mx-auto px-4 py-8 lg:px-6">
-                            <div className="grid lg:grid-cols-3 gap-8">
+                        <div className="max-w-7xl mx-auto px-4 py-6 lg:py-8 lg:px-6">
+                            <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
                                 {/* Left Column - Course Info & Tabs */}
-                                <div className="lg:col-span-2 space-y-6">
+                                <div className="lg:col-span-2 space-y-4 lg:space-y-6">
                                     {/* Course Header */}
-                                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-                                        <h1 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-6 leading-tight">{course.title}</h1>
+                                    <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 lg:p-8">
+                                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 lg:mb-6 leading-tight break-words">{course.title}</h1>
 
-                                        <div className="flex flex-wrap items-center gap-5 text-sm mb-6">
-                                            <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 px-4 py-2 rounded-full border border-yellow-200">
-                                                <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-5 text-xs sm:text-sm mb-4 lg:mb-6">
+                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-yellow-200">
+                                                <Star className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500 fill-yellow-500" />
                                                 <span className="font-bold text-gray-900">{staticData.rating}</span>
-                                                <span className="text-gray-600">rating</span>
+                                                <span className="text-gray-600 hidden sm:inline">rating</span>
                                             </div>
-                                            <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-full border border-blue-200">
-                                                <Users className="w-5 h-5 text-blue-600" />
+                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-blue-50 to-purple-50 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-blue-200">
+                                                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                                                 <span className="font-semibold text-gray-900">{course.attendee_count || 0}</span>
-                                                <span className="text-gray-600">students</span>
+                                                <span className="text-gray-600 hidden sm:inline">students</span>
                                             </div>
-                                            <div className="flex items-center gap-2 bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2 rounded-full border border-green-200">
-                                                <Clock className="w-5 h-5 text-green-600" />
-                                                <span className="font-semibold text-gray-900">{duration}</span>
+                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-green-50 to-emerald-50 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-green-200">
+                                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                                                <span className="font-semibold text-gray-900 whitespace-nowrap">{duration}</span>
                                             </div>
-                                            <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-2 rounded-full border border-purple-200">
-                                                <TrendingUp className="w-5 h-5 text-purple-600" />
+                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-purple-50 to-pink-50 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-purple-200">
+                                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
                                                 <span className="font-semibold text-gray-900">{course.level}</span>
                                             </div>
-                                            <div className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full text-xs font-bold shadow-md">
+                                            <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full text-xs font-bold shadow-md whitespace-nowrap">
                                                 {course.category}
                                             </div>
                                         </div>
 
-                                    <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200">
-                                        <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                    <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200">
+                                        <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg shadow-lg flex-shrink-0">
                                             {course.tutor.first_name[0]}{course.tutor.last_name[0]}
                                         </div>
-                                        <div>
-                                            <p className="text-sm text-gray-500 font-medium">Instructor</p>
-                                            <p className="text-base font-bold text-gray-900">{course.tutor.first_name} {course.tutor.last_name}</p>
-                                            <p className="text-sm text-gray-600">{course.tutor.bio || 'Expert Course Instructor'}</p>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Instructor</p>
+                                            <p className="text-sm sm:text-base font-bold text-gray-900 truncate">{course.tutor.first_name} {course.tutor.last_name}</p>
+                                            <p className="text-xs sm:text-sm text-gray-600 truncate">{course.tutor.bio || 'Expert Course Instructor'}</p>
                                         </div>
                                     </div>
 
@@ -523,10 +523,10 @@ export default function SingleCoursePage() {
                                             </div>
                                         )}
 
-                                        <div className="flex items-center justify-between p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl border-2 border-blue-200 shadow-sm">
-                                            <div>
-                                                <p className="text-sm text-gray-600 font-medium mb-1">Course Price</p>
-                                                <p className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl border-2 border-blue-200 shadow-sm">
+                                            <div className="min-w-0">
+                                                <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1">Course Price</p>
+                                                <p className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent break-words">
                                                     {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
                                                 </p>
                                             </div>
@@ -534,12 +534,12 @@ export default function SingleCoursePage() {
                                                 <button 
                                                     onClick={handleEnrollment}
                                                     disabled={enrolling || enrollmentSuccess}
-                                                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                                    className="w-full sm:w-auto bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base whitespace-nowrap"
                                                 >
                                                     {enrolling ? (
                                                         <>
                                                             <Loader2 className="w-4 h-4 animate-spin" />
-                                                            Processing...
+                                                            <span>Processing...</span>
                                                         </>
                                                     ) : (
                                                         course.is_free ? 'Enroll Free' : 'Pay & Enroll'
@@ -550,22 +550,22 @@ export default function SingleCoursePage() {
                                             {isEnrolled && isLive && currentUser && (
                                                 <button
                                                     onClick={() => router.push(`/dashboard/join/${course.id}`)}
-                                                    className="bg-gradient-to-r from-red-600 to-pink-600 text-white px-6 py-3 rounded-lg hover:from-red-700 hover:to-pink-700 transition-all font-bold flex items-center gap-2 shadow-lg animate-pulse"
+                                                    className="w-full sm:w-auto bg-gradient-to-r from-red-600 to-pink-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:from-red-700 hover:to-pink-700 transition-all font-bold flex items-center justify-center gap-2 shadow-lg animate-pulse text-sm sm:text-base"
                                                 >
                                                     <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-                                                    {course.tutor.id === currentUser.id ? 'Start Live Session' : 'Join Live Session'}
+                                                    <span className="truncate">{course.tutor.id === currentUser.id ? 'Start Live Session' : 'Join Live Session'}</span>
                                                 </button>
                                             )}
                                             {/* Show enrollment status when not live */}
                                             {isEnrolled && !isLive && currentUser && course.tutor.id === currentUser.id && (
-                                                <div className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
+                                                <div className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-xs sm:text-sm font-medium text-center">
                                                     Your Course
                                                 </div>
                                             )}
                                             {isEnrolled && !isLive && currentUser && course.tutor.id !== currentUser.id && (
-                                                <div className="px-4 py-2 bg-green-50 text-green-700 rounded-lg text-sm font-medium flex items-center gap-2">
+                                                <div className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-green-50 text-green-700 rounded-lg text-xs sm:text-sm font-medium flex items-center justify-center gap-2">
                                                     <CheckCircle className="w-4 h-4" />
-                                                    Already Enrolled
+                                                    <span>Already Enrolled</span>
                                                 </div>
                                             )}
                                         </div>
@@ -573,14 +573,14 @@ export default function SingleCoursePage() {
                                 </div>
 
                                 {/* Tabs */}
-                                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                                <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                                     <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50">
                                         <div className="flex">
                                             {["overview", "resources", "discussion"].map((tab) => (
                                                 <button
                                                     key={tab}
                                                     onClick={() => setActiveTab(tab)}
-                                                    className={`flex-1 px-6 py-4 text-sm font-bold capitalize transition-all relative ${
+                                                    className={`flex-1 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm font-bold capitalize transition-all relative ${
                                                         activeTab === tab
                                                             ? "text-blue-600 bg-white"
                                                             : "text-gray-600 hover:text-blue-600 hover:bg-white/50"
@@ -595,21 +595,21 @@ export default function SingleCoursePage() {
                                         </div>
                                     </div>
 
-                                    <div className="p-6">
+                                    <div className="p-4 sm:p-6">
                                         {/* Overview Tab */}
                                         {activeTab === "overview" && (
                                             <div className="space-y-4">
                                                 <div>
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-3">About This Course</h3>
-                                                    <p className="text-gray-600 leading-relaxed mb-4">
+                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3">About This Course</h3>
+                                                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4">
                                                         {course.description}
                                                     </p>
                                                 </div>
 
-                                                <div className="grid md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 rounded-lg">
                                                     <div>
-                                                        <p className="text-sm text-gray-600 mb-1">Start Date</p>
-                                                        <p className="font-semibold text-gray-900">
+                                                        <p className="text-xs sm:text-sm text-gray-600 mb-1">Start Date</p>
+                                                        <p className="font-semibold text-gray-900 text-sm sm:text-base break-words">
                                                             {course.scheduled_start ? new Date(course.scheduled_start).toLocaleDateString('en-US', {
                                                                 month: 'long',
                                                                 day: 'numeric',
@@ -620,8 +620,8 @@ export default function SingleCoursePage() {
                                                         </p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm text-gray-600 mb-1">End Date</p>
-                                                        <p className="font-semibold text-gray-900">
+                                                        <p className="text-xs sm:text-sm text-gray-600 mb-1">End Date</p>
+                                                        <p className="font-semibold text-gray-900 text-sm sm:text-base break-words">
                                                             {course.scheduled_end ? new Date(course.scheduled_end).toLocaleDateString('en-US', {
                                                                 month: 'long',
                                                                 day: 'numeric',
@@ -634,7 +634,7 @@ export default function SingleCoursePage() {
                                                 </div>
 
                                                 <div>
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-3">What You&apos;ll Learn</h3>
+                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3">What You&apos;ll Learn</h3>
                                                     <ul className="space-y-2">
                                                         {[
                                                             "Build and train neural networks from scratch",
@@ -644,8 +644,8 @@ export default function SingleCoursePage() {
                                                             "Understand deep learning mathematics"
                                                         ].map((item, i) => (
                                                             <li key={i} className="flex items-start gap-2">
-                                                                <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
-                                                                <span className="text-gray-600">{item}</span>
+                                                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900 flex-shrink-0 mt-0.5" />
+                                                                <span className="text-sm sm:text-base text-gray-600">{item}</span>
                                                             </li>
                                                         ))}
                                                     </ul>
@@ -656,15 +656,15 @@ export default function SingleCoursePage() {
                                         {/* Resources Tab */}
                                         {activeTab === "resources" && (
                                             <div className="space-y-3">
-                                                <h3 className="text-lg font-bold text-gray-900 mb-4">Course Materials</h3>
+                                                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Course Materials</h3>
                                                 {resources.map((resource, i) => (
-                                                    <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
-                                                                <FileText className="w-5 h-5 text-gray-600" />
+                                                    <div key={i} className="flex items-center justify-between gap-2 sm:gap-3 p-3 sm:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
                                                             </div>
-                                                            <div>
-                                                                <p className="font-medium text-gray-900">{resource.name}</p>
+                                                            <div className="min-w-0 flex-1">
+                                                                <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{resource.name}</p>
                                                                 <p className="text-xs text-gray-500">{resource.size}</p>
                                                             </div>
                                                         </div>
@@ -678,42 +678,42 @@ export default function SingleCoursePage() {
 
                                         {/* Discussion Tab */}
                                         {activeTab === "discussion" && (
-                                            <div className="space-y-6">
+                                            <div className="space-y-4 sm:space-y-6">
                                                 {/* Ask Question */}
                                                 <div>
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-4">Ask a Question</h3>
-                                                    <div className="flex gap-3">
+                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Ask a Question</h3>
+                                                    <div className="flex gap-2 sm:gap-3">
                                                         <textarea
                                                             value={question}
                                                             onChange={(e) => setQuestion(e.target.value)}
                                                             placeholder="Type your question here..."
-                                                            className="flex-1 p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none"
+                                                            className="flex-1 p-2.5 sm:p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none text-sm sm:text-base"
                                                             rows={3}
                                                         />
                                                     </div>
-                                                    <button className="mt-3 bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-xl font-medium transition-colors flex items-center gap-2">
+                                                    <button className="mt-3 bg-gray-900 hover:bg-gray-800 text-white px-4 sm:px-6 py-2 rounded-xl font-medium transition-colors flex items-center gap-2 text-sm sm:text-base">
                                                         <Send className="w-4 h-4" />
-                                                        Post Question
+                                                        <span>Post Question</span>
                                                     </button>
                                                 </div>
 
                                                 {/* Questions List */}
                                                 <div>
-                                                    <h3 className="text-lg font-bold text-gray-900 mb-4">Recent Discussions</h3>
-                                                    <div className="space-y-4">
+                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Recent Discussions</h3>
+                                                    <div className="space-y-3 sm:space-y-4">
                                                         {discussions.map((discussion, i) => (
-                                                            <div key={i} className="p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer">
-                                                                <div className="flex items-start gap-3">
-                                                                    <div className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+                                                            <div key={i} className="p-3 sm:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer">
+                                                                <div className="flex items-start gap-2 sm:gap-3">
+                                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-900 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm flex-shrink-0">
                                                                         {discussion.avatar}
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
-                                                                        <div className="flex items-center gap-2 mb-1">
-                                                                            <p className="font-semibold text-gray-900">{discussion.user}</p>
+                                                                        <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
+                                                                            <p className="font-semibold text-gray-900 text-sm sm:text-base">{discussion.user}</p>
                                                                             <span className="text-xs text-gray-500">{discussion.time}</span>
                                                                         </div>
-                                                                        <p className="text-gray-700 mb-2">{discussion.question}</p>
-                                                                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                                        <p className="text-gray-700 mb-2 text-sm sm:text-base break-words">{discussion.question}</p>
+                                                                        <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
                                                                             <MessageSquare className="w-4 h-4" />
                                                                             <span>{discussion.replies} replies</span>
                                                                         </div>
@@ -730,11 +730,11 @@ export default function SingleCoursePage() {
                             </div>
 
                             {/* Right Column - Course Content & Episodes */}
-                            <div className="lg:col-span-1 space-y-6">
+                            <div className="lg:col-span-1 space-y-4 lg:space-y-6">
                                 {/* Course Content */}
-                                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sticky top-6">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <h3 className="text-xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Course Content</h3>
+                                <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 lg:sticky lg:top-6">
+                                    <div className="flex items-center justify-between mb-4 sm:mb-6">
+                                        <h3 className="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Course Content</h3>
                                         <button className="p-2 hover:bg-blue-50 rounded-lg transition-colors group">
                                             <Share2 className="w-5 h-5 text-gray-600 group-hover:text-blue-600" />
                                         </button>
@@ -745,10 +745,10 @@ export default function SingleCoursePage() {
                                             <div key={moduleIndex} className="border border-gray-200 rounded-xl overflow-hidden">
                                                 <button
                                                     onClick={() => setExpandedModule(expandedModule === moduleIndex ? -1 : moduleIndex)}
-                                                    className="w-full px-4 py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors"
+                                                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors"
                                                 >
-                                                    <div className="text-left">
-                                                        <p className="font-semibold text-gray-900 text-sm">{module.title}</p>
+                                                    <div className="text-left min-w-0 flex-1 mr-2">
+                                                        <p className="font-semibold text-gray-900 text-xs sm:text-sm truncate">{module.title}</p>
                                                         <p className="text-xs text-gray-500">{module.duration}</p>
                                                     </div>
                                                     <ChevronDown
@@ -764,15 +764,15 @@ export default function SingleCoursePage() {
                                                             <button
                                                                 key={lessonIndex}
                                                                 onClick={() => setCurrentLesson(lessonIndex)}
-                                                                className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100 last:border-b-0 ${currentLesson === lessonIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
+                                                                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100 last:border-b-0 ${currentLesson === lessonIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
                                                             >
                                                                 {lesson.completed ? (
-                                                                    <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0" />
+                                                                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900 flex-shrink-0" />
                                                                 ) : (
-                                                                    <Circle className="w-5 h-5 text-gray-300 flex-shrink-0" />
+                                                                    <Circle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300 flex-shrink-0" />
                                                                 )}
                                                                 <div className="flex-1 min-w-0">
-                                                                    <p className="font-medium text-gray-900 text-sm">{lesson.title}</p>
+                                                                    <p className="font-medium text-gray-900 text-xs sm:text-sm truncate">{lesson.title}</p>
                                                                     <p className="text-xs text-gray-500">{lesson.duration}</p>
                                                                 </div>
                                                             </button>
@@ -785,9 +785,9 @@ export default function SingleCoursePage() {
                                 </div>
 
                                 {/* Episodes Section */}
-                                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                                <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
                                     <div className="flex items-center justify-between mb-4">
-                                        <h3 className="text-xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Course Episodes</h3>
+                                        <h3 className="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Course Episodes</h3>
                                         {!isEnrolled && (
                                             <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full flex items-center gap-1">
                                                 <Lock className="w-3 h-3" />
@@ -802,7 +802,7 @@ export default function SingleCoursePage() {
                                         )}
                                     </div>
                                     
-                                    <div className="grid grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {episodes.map((episode) => {
                                             const isPublished = course.published_at !== null;
                                             const canWatch = isEnrolled && isPublished;
@@ -876,16 +876,16 @@ export default function SingleCoursePage() {
                                         </div>
                                     )}
                                     {isEnrolled && !course.published_at && course.scheduled_start && (
-                                        <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-                                            <div className="flex items-start gap-3">
-                                                <Clock className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
-                                                <div>
-                                                    <p className="text-sm font-semibold text-orange-900 mb-1">
+                                        <div className="mt-4 p-3 sm:p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                                            <div className="flex items-start gap-2 sm:gap-3">
+                                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+                                                <div className="min-w-0 flex-1">
+                                                    <p className="text-xs sm:text-sm font-semibold text-orange-900 mb-1">
                                                         Live Session Scheduled
                                                     </p>
-                                                    <p className="text-sm text-orange-800">
+                                                    <p className="text-xs sm:text-sm text-orange-800 break-words">
                                                         This course will go live on{' '}
-                                                        <span className="font-bold">
+                                                        <span className="font-bold break-words">
                                                             {course.scheduled_start && new Date(course.scheduled_start).toLocaleDateString('en-US', {
                                                                 weekday: 'long',
                                                                 year: 'numeric',
