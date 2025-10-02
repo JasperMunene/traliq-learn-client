@@ -30,7 +30,7 @@ export default function OnboardingPage() {
                 setLoading(true);
                 setError(null);
                 
-                const response = await fetchWithAuth('http://16.171.54.227:5000/api/users/me');
+                const response = await fetchWithAuth('https://api.traliq.com/api/users/me');
                 
                 if (!response.ok) {
                     if (response.status === 401) {
@@ -70,7 +70,7 @@ export default function OnboardingPage() {
         try {
             setUpdating(true);
             setError(null);
-            const response = await fetchWithAuth('http://16.171.54.227:5000/api/users/me/role', {
+            const response = await fetchWithAuth('https://api.traliq.com/api/users/me/role', {
                 method: 'POST',
                 body: JSON.stringify({ role }),
             });

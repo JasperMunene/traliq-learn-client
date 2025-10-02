@@ -37,7 +37,7 @@ export default function CourseGrid() {
             setLoading(true);
             
             // Fetch all courses
-            const coursesResponse = await fetchWithAuth('http://16.171.54.227:5000/courses');
+            const coursesResponse = await fetchWithAuth('https://api.traliq.com/courses');
             
             if (coursesResponse.ok) {
                 const coursesData = await coursesResponse.json();

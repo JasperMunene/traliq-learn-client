@@ -125,7 +125,7 @@ export default function SingleCoursePage() {
 
     const fetchCurrentUser = async () => {
         try {
-            const response = await fetchWithAuth('http://16.171.54.227:5000/api/users/me');
+            const response = await fetchWithAuth('http://localhost:5000/api/users/me');
             if (response.ok) {
                 const userData = await response.json();
                 setCurrentUser(userData);
@@ -138,7 +138,7 @@ export default function SingleCoursePage() {
     const fetchCourseDetails = async () => {
         try {
             setLoading(true);
-            const response = await fetchWithAuth(`http://16.171.54.227:5000/courses/${courseId}`);
+            const response = await fetchWithAuth(`http://localhost:5000/courses/${courseId}`);
             
             if (response.ok) {
                 const data = await response.json();
@@ -157,7 +157,7 @@ export default function SingleCoursePage() {
     const checkEnrollmentStatus = async () => {
         try {
             // Check if user is enrolled in this course
-            const response = await fetchWithAuth('http://16.171.54.227:5000/users/me/enrollments');
+            const response = await fetchWithAuth('http://localhost:5000/users/me/enrollments');
             if (response.ok) {
                 const data = await response.json();
                 const enrollments = data.enrollments || [];
@@ -185,7 +185,7 @@ export default function SingleCoursePage() {
             if (course.is_free) {
                 // Free course - direct enrollment
                 const response = await fetchWithAuth(
-                    `http://16.171.54.227:5000/courses/${course.id}/enroll`,
+                    `http://localhost:5000/courses/${course.id}/enroll`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' }
@@ -204,7 +204,7 @@ export default function SingleCoursePage() {
             } else {
                 // Paid course - initialize payment
                 const response = await fetchWithAuth(
-                    'http://16.171.54.227:5000/api/payments/initialize',
+                    'http://localhost:5000/api/payments/initialize',
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },

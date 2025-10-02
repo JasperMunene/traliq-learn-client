@@ -60,7 +60,7 @@ export default function TutorOnboarding() {
                 linkedin_url: formData.linkedinUrl || null
             };
 
-            const response = await fetchWithAuth('http://16.171.54.227:5000/tutors', {
+            const response = await fetchWithAuth('https://api.traliq.com/tutors', {
                 method: 'POST',
                 body: JSON.stringify(payload)
             });

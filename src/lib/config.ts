@@ -4,7 +4,7 @@
  */
 
 // Use environment variable or fallback to local API
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://16.171.54.227:5000';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.traliq.com';
 
 // API Endpoints
 export const API_ENDPOINTS = {

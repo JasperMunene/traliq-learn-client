@@ -259,13 +259,13 @@ Response (Success):
 ### Development
 ```bash
 # Create .env.local file
-echo "NEXT_PUBLIC_API_URL=http://16.171.54.227:5000" > .env.local
+echo "NEXT_PUBLIC_API_URL=https://api.traliq.com" > .env.local
 ```
 
 ### Production
 ```bash
 # Set in deployment environment
-NEXT_PUBLIC_API_URL=http://16.171.54.227:5000
+NEXT_PUBLIC_API_URL=https://api.traliq.com
 ```
 
 ---

@@ -67,7 +67,7 @@ export default function LoginPage() {
 
         try {
             // Make API call to your Flask backend
-            const response = await fetch('http://16.171.54.227:5000/auth/signin', {
+            const response = await fetch('https://api.traliq.com/auth/signin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export default function LoginPage() {
         setIsGoogleLoading(true);
         try {
             // Redirect to your backend Google OAuth endpoint
-            window.location.href = 'http://16.171.54.227:5000/auth/google';
+            window.location.href = 'https://api.traliq.com/auth/google';
         } catch (error) {
             console.error('Google login failed:', error);
             setErrors({ general: 'Google login failed. Please try again.' });

@@ -31,7 +31,7 @@ function DashboardContent() {
     useEffect(() => {
                 const fetchUser = async () => {
             try {
-                const response = await fetchWithAuth('http://16.171.54.227:5000/api/users/me');
+                const response = await fetchWithAuth('https://api.traliq.com/api/users/me');
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');

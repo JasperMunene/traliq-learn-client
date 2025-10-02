@@ -104,7 +104,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
         const fetchInitialData = async () => {
             await checkSessionStatus();
             try {
-                const res = await fetchWithAuth('http://16.171.54.227:5000/api/users/me');
+                const res = await fetchWithAuth('https://api.traliq.com/api/users/me');
                 if (res.ok) {
                     const userData = await res.json();
                     setUser(userData);
