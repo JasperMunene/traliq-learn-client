@@ -5,6 +5,7 @@ import { fetchWithAuth } from '@/lib/api';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import CourseGrid from '@/components/dashboard/CourseGrid';
+import { API_ENDPOINTS } from '@/lib/config';
 
 interface UserData {
     first_name: string;
@@ -20,7 +21,7 @@ export default function CoursesPage() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetchWithAuth('https://api.traliq.com/api/users/me');
+                const response = await fetchWithAuth(API_ENDPOINTS.users.me);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');

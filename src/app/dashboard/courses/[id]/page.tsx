@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchWithAuth } from "@/lib/api";
+import { API_ENDPOINTS } from "@/lib/config";
 import {
     Play,
     CheckCircle,
@@ -19,6 +20,11 @@ import {
     Lock,
     ArrowLeft,
     TrendingUp,
+    File as FileIcon,
+    Image as ImageIcon,
+    Video as VideoIcon,
+    Headphones as AudioIcon,
+    Archive as ZipIcon
 } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
@@ -37,6 +43,7 @@ interface Course {
     published_at: string | null;
     scheduled_start: string | null;
     scheduled_end: string | null;
+    course_type?: 'public' | 'corporate';
     tutor: {
         id: string;
         first_name: string;
@@ -46,6 +53,40 @@ interface Course {
     };
     attendee_count: number;
     created_at: string;
+}
+
+interface CourseModule {
+    id: string;
+    course_id: string;
+    title: string;
+    description?: string | null;
+    position: number;
+    duration_minutes?: number | null;
+    is_published: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+interface CourseAsset {
+    id: string;
+    name: string;
+    description?: string | null;
+    asset_type: string;
+    file_extension?: string | null;
+    file_url: string;
+    thumbnail_url?: string | null;
+    preview_url?: string | null;
+    file_size?: number | null;
+    mime_type?: string | null;
+    duration?: number | null;
+    is_public: boolean;
+    requires_enrollment: boolean;
+    tags?: string[];
+    category?: string | null;
+    sort_order?: number;
+    module_id?: string | null;
+    created_at: string;
+    updated_at: string;
 }
 
 interface User {
@@ -78,10 +119,11 @@ export default function SingleCoursePage() {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [activeTab, setActiveTab] = useState("overview");
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [expandedModule, setExpandedModule] = useState(0);
-    const [currentLesson, setCurrentLesson] = useState(0);
+    const [expandedModule, setExpandedModule] = useState<string | null>(null);
     const [question, setQuestion] = useState("");
     const [isLive, setIsLive] = useState(false);
+    const [modules, setModules] = useState<CourseModule[]>([]);
+    const [assets, setAssets] = useState<CourseAsset[]>([]);
 
     useEffect(() => {
         fetchCurrentUser();
@@ -125,7 +167,7 @@ export default function SingleCoursePage() {
 
     const fetchCurrentUser = async () => {
         try {
-            const response = await fetchWithAuth('https://api.traliq.com/api/users/me');
+            const response = await fetchWithAuth(API_ENDPOINTS.users.me);
             if (response.ok) {
                 const userData = await response.json();
                 setCurrentUser(userData);
@@ -138,11 +180,13 @@ export default function SingleCoursePage() {
     const fetchCourseDetails = async () => {
         try {
             setLoading(true);
-            const response = await fetchWithAuth(`https://api.traliq.com/courses/${courseId}`);
+            const response = await fetchWithAuth(API_ENDPOINTS.courses.detail(courseId));
             
             if (response.ok) {
                 const data = await response.json();
                 setCourse(data);
+                // Fetch modules after course loads
+                fetchModules();
             } else {
                 setError('Failed to load course details');
             }
@@ -154,10 +198,40 @@ export default function SingleCoursePage() {
         }
     };
 
+    const fetchModules = async () => {
+        try {
+            const resp = await fetchWithAuth(API_ENDPOINTS.courses.modules(courseId));
+            if (resp.ok) {
+                const data = await resp.json();
+                setModules(Array.isArray(data.modules) ? data.modules : []);
+            }
+        } catch (e) {
+            console.error('Error fetching modules', e);
+        }
+    };
+
+    const fetchAssets = async (onlyIfAuthorized = true) => {
+        try {
+            // Only fetch assets when user has access (tutor or enrolled)
+            if (onlyIfAuthorized) {
+                const resp = await fetchWithAuth(API_ENDPOINTS.courses.assets(courseId));
+                if (resp.ok) {
+                    const data = await resp.json();
+                    setAssets(Array.isArray(data.assets) ? data.assets : []);
+                } else if (resp.status === 403) {
+                    // No access, keep assets empty and UI will show locked state
+                    setAssets([]);
+                }
+            }
+        } catch (e) {
+            console.error('Error fetching assets', e);
+        }
+    };
+
     const checkEnrollmentStatus = async () => {
         try {
             // Check if user is enrolled in this course
-            const response = await fetchWithAuth('https://api.traliq.com/users/me/enrollments');
+            const response = await fetchWithAuth(API_ENDPOINTS.enrollments.mine);
             if (response.ok) {
                 const data = await response.json();
                 const enrollments = data.enrollments || [];
@@ -185,7 +259,7 @@ export default function SingleCoursePage() {
             if (course.is_free) {
                 // Free course - direct enrollment
                 const response = await fetchWithAuth(
-                    `https://api.traliq.com/courses/${course.id}/enroll`,
+                    API_ENDPOINTS.courses.enroll(course.id),
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' }
@@ -204,7 +278,7 @@ export default function SingleCoursePage() {
             } else {
                 // Paid course - initialize payment
                 const response = await fetchWithAuth(
-                    'https://api.traliq.com/api/payments/initialize',
+                    API_ENDPOINTS.payments.initialize,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -232,49 +306,8 @@ export default function SingleCoursePage() {
         }
     };
 
-    // Static data for fields not available from API
-    const staticData = {
-        rating: 4.8,
-        progress: 0,
-        currentVideo: "Introduction to Course"
-    };
-
-    const modules = [
-        {
-            title: "Getting Started with AI",
-            duration: "2h 30m",
-            lessons: [
-                { title: "Introduction to AI", duration: "15:30", completed: true },
-                { title: "Setting up your environment", duration: "20:15", completed: true },
-                { title: "Your first AI model", duration: "25:45", completed: false }
-            ]
-        },
-        {
-            title: "Neural Networks Fundamentals",
-            duration: "3h 45m",
-            lessons: [
-                { title: "What are Neural Networks?", duration: "18:20", completed: false },
-                { title: "Activation Functions", duration: "22:10", completed: false },
-                { title: "Backpropagation Explained", duration: "30:15", completed: false }
-            ]
-        },
-        {
-            title: "Deep Learning Advanced",
-            duration: "4h 15m",
-            lessons: [
-                { title: "CNN Architecture", duration: "25:30", completed: false },
-                { title: "RNN and LSTM", duration: "28:45", completed: false },
-                { title: "Transfer Learning", duration: "32:20", completed: false }
-            ]
-        }
-    ];
-
-    const resources = [
-        { name: "Course Slides - Module 1.pdf", size: "2.4 MB", type: "PDF" },
-        { name: "Code Examples.zip", size: "15.8 MB", type: "ZIP" },
-        { name: "Dataset - Training Data.csv", size: "45.2 MB", type: "CSV" },
-        { name: "Cheat Sheet.pdf", size: "1.2 MB", type: "PDF" }
-    ];
+    // Static data for fields not available from API (rating/progress placeholder)
+    const staticData = { rating: 4.8, progress: 0 };
 
     const discussions = [
         {
@@ -300,51 +333,25 @@ export default function SingleCoursePage() {
         }
     ];
 
-    // Episode thumbnails - static data
-    const episodes = [
-        {
-            id: 1,
-            title: "Introduction & Setup",
-            thumbnail: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400&h=225&fit=crop",
-            duration: "15:30",
-            number: 1
-        },
-        {
-            id: 2,
-            title: "Core Concepts",
-            thumbnail: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=225&fit=crop",
-            duration: "22:45",
-            number: 2
-        },
-        {
-            id: 3,
-            title: "Practical Examples",
-            thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=225&fit=crop",
-            duration: "18:20",
-            number: 3
-        },
-        {
-            id: 4,
-            title: "Advanced Techniques",
-            thumbnail: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&h=225&fit=crop",
-            duration: "25:10",
-            number: 4
-        },
-        {
-            id: 5,
-            title: "Final Project",
-            thumbnail: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=225&fit=crop",
-            duration: "30:15",
-            number: 5
-        },
-        {
-            id: 6,
-            title: "Q&A Session",
-            thumbnail: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=225&fit=crop",
-            duration: "20:00",
-            number: 6
+    // Derive episodes-like cards from modules
+    const episodes = modules.map((m, idx) => ({
+        id: idx + 1,
+        title: m.title,
+        thumbnail: course?.thumbnail_url || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=225&fit=crop",
+        duration: m.duration_minutes ? `${m.duration_minutes} min` : '—',
+        number: m.position + 1,
+    }));
+
+    const getAssetsForModule = (moduleId: string) => assets.filter(a => a.module_id === moduleId);
+    const getCourseLevelAssets = () => assets.filter(a => !a.module_id);
+    const canAccessAssets = !!(currentUser && (isEnrolled || (course && currentUser.id === course.tutor.id)));
+
+    useEffect(() => {
+        if (course && canAccessAssets) {
+            fetchAssets(true);
         }
-    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [course, isEnrolled, currentUser]);
 
     if (loading) {
         return (
@@ -496,6 +503,11 @@ export default function SingleCoursePage() {
                                             <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full text-xs font-bold shadow-md whitespace-nowrap">
                                                 {course.category}
                                             </div>
+                                            {course.course_type === 'corporate' && (
+                                                <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 bg-indigo-600 text-white rounded-full text-xs font-bold shadow-md whitespace-nowrap">
+                                                    Corporate
+                                                </div>
+                                            )}
                                         </div>
 
                                     <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200">
@@ -655,24 +667,79 @@ export default function SingleCoursePage() {
 
                                         {/* Resources Tab */}
                                         {activeTab === "resources" && (
-                                            <div className="space-y-3">
-                                                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Course Materials</h3>
-                                                {resources.map((resource, i) => (
-                                                    <div key={i} className="flex items-center justify-between gap-2 sm:gap-3 p-3 sm:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                                                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                                                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-                                                            </div>
-                                                            <div className="min-w-0 flex-1">
-                                                                <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{resource.name}</p>
-                                                                <p className="text-xs text-gray-500">{resource.size}</p>
-                                                            </div>
-                                                        </div>
-                                                        <button className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
-                                                            <Download className="w-5 h-5 text-gray-600" />
-                                                        </button>
+                                            <div className="space-y-4">
+                                                {!canAccessAssets && (
+                                                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+                                                        Enroll to access downloadable materials and resources.
                                                     </div>
-                                                ))}
+                                                )}
+                                                {canAccessAssets && (
+                                                    <>
+                                                        {/* Course-level assets */}
+                                                        {getCourseLevelAssets().length > 0 && (
+                                                            <div>
+                                                                <h4 className="text-sm font-bold text-gray-900 mb-2">General Resources</h4>
+                                                                <div className="space-y-2">
+                                                                    {getCourseLevelAssets().map((a) => (
+                                                                        <div key={a.id} className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                                                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                                                                                <div className="w-9 h-9 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                    {a.asset_type === 'pdf' || a.asset_type === 'document' ? <FileIcon className="w-4 h-4 text-gray-600" />
+                                                                                        : a.asset_type === 'image' ? <ImageIcon className="w-4 h-4 text-gray-600" />
+                                                                                        : a.asset_type === 'video' ? <VideoIcon className="w-4 h-4 text-gray-600" />
+                                                                                        : a.asset_type === 'audio' ? <AudioIcon className="w-4 h-4 text-gray-600" />
+                                                                                        : a.asset_type === 'zip' ? <ZipIcon className="w-4 h-4 text-gray-600" />
+                                                                                        : <FileText className="w-4 h-4 text-gray-600" />}
+                                                                                </div>
+                                                                                <div className="min-w-0 flex-1">
+                                                                                    <p className="font-medium text-gray-900 text-sm truncate">{a.name}</p>
+                                                                                    <p className="text-xs text-gray-500">{a.asset_type.toUpperCase()}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <button onClick={() => window.open(a.file_url, '_blank')} className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
+                                                                                <Download className="w-5 h-5 text-gray-600" />
+                                                                            </button>
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Module assets */}
+                                                        {modules.map((m) => (
+                                                            <div key={m.id}>
+                                                                <h4 className="text-sm font-bold text-gray-900 mb-2">{m.title}</h4>
+                                                                {getAssetsForModule(m.id).length === 0 ? (
+                                                                    <p className="text-xs text-gray-500 mb-3">No resources in this module yet.</p>
+                                                                ) : (
+                                                                    <div className="space-y-2 mb-4">
+                                                                        {getAssetsForModule(m.id).map((a) => (
+                                                                            <div key={a.id} className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                                                                <div className="flex items-center gap-3 min-w-0 flex-1">
+                                                                                    <div className="w-9 h-9 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                        {a.asset_type === 'pdf' || a.asset_type === 'document' ? <FileIcon className="w-4 h-4 text-gray-600" />
+                                                                                            : a.asset_type === 'image' ? <ImageIcon className="w-4 h-4 text-gray-600" />
+                                                                                            : a.asset_type === 'video' ? <VideoIcon className="w-4 h-4 text-gray-600" />
+                                                                                            : a.asset_type === 'audio' ? <AudioIcon className="w-4 h-4 text-gray-600" />
+                                                                                            : a.asset_type === 'zip' ? <ZipIcon className="w-4 h-4 text-gray-600" />
+                                                                                            : <FileText className="w-4 h-4 text-gray-600" />}
+                                                                                    </div>
+                                                                                    <div className="min-w-0 flex-1">
+                                                                                        <p className="font-medium text-gray-900 text-sm truncate">{a.name}</p>
+                                                                                        <p className="text-xs text-gray-500">{a.asset_type.toUpperCase()}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <button onClick={() => window.open(a.file_url, '_blank')} className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
+                                                                                    <Download className="w-5 h-5 text-gray-600" />
+                                                                                </button>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        ))}
+                                                    </>
+                                                )}
                                             </div>
                                         )}
 
@@ -741,42 +808,49 @@ export default function SingleCoursePage() {
                                     </div>
 
                                     <div className="space-y-2 max-h-[calc(100vh-16rem)] overflow-y-auto">
-                                        {modules.map((module, moduleIndex) => (
-                                            <div key={moduleIndex} className="border border-gray-200 rounded-xl overflow-hidden">
+                                        {modules.map((module) => (
+                                            <div key={module.id} className="border border-gray-200 rounded-xl overflow-hidden">
                                                 <button
-                                                    onClick={() => setExpandedModule(expandedModule === moduleIndex ? -1 : moduleIndex)}
+                                                    onClick={() => setExpandedModule(expandedModule === module.id ? null : module.id)}
                                                     className="w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors"
                                                 >
                                                     <div className="text-left min-w-0 flex-1 mr-2">
                                                         <p className="font-semibold text-gray-900 text-xs sm:text-sm truncate">{module.title}</p>
-                                                        <p className="text-xs text-gray-500">{module.duration}</p>
+                                                        <p className="text-xs text-gray-500">{module.duration_minutes ? `${module.duration_minutes} min` : '—'}</p>
                                                     </div>
                                                     <ChevronDown
                                                         className={`w-5 h-5 text-gray-600 transition-transform ${
-                                                            expandedModule === moduleIndex ? "rotate-180" : ""
+                                                            expandedModule === module.id ? "rotate-180" : ""
                                                         }`}
                                                     />
                                                 </button>
 
-                                                {expandedModule === moduleIndex && (
+                                                {expandedModule === module.id && (
                                                     <div className="border-t border-gray-200">
-                                                        {module.lessons.map((lesson, lessonIndex) => (
-                                                            <button
-                                                                key={lessonIndex}
-                                                                onClick={() => setCurrentLesson(lessonIndex)}
-                                                                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100 last:border-b-0 ${currentLesson === lessonIndex ? "bg-gray-100" : "hover:bg-gray-50"}`}
-                                                            >
-                                                                {lesson.completed ? (
-                                                                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900 flex-shrink-0" />
-                                                                ) : (
-                                                                    <Circle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300 flex-shrink-0" />
-                                                                )}
-                                                                <div className="flex-1 min-w-0">
-                                                                    <p className="font-medium text-gray-900 text-xs sm:text-sm truncate">{lesson.title}</p>
-                                                                    <p className="text-xs text-gray-500">{lesson.duration}</p>
-                                                                </div>
-                                                            </button>
-                                                        ))}
+                                                        {canAccessAssets ? (
+                                                            getAssetsForModule(module.id).length > 0 ? (
+                                                                getAssetsForModule(module.id).map((a) => (
+                                                                    <div key={a.id} className="w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100 last:border-b-0">
+                                                                        <div className="w-5 h-5 flex items-center justify-center">
+                                                                            {a.asset_type === 'video' ? <VideoIcon className="w-4 h-4 text-gray-600" /> : a.asset_type === 'pdf' || a.asset_type === 'document' ? <FileIcon className="w-4 h-4 text-gray-600" /> : a.asset_type === 'image' ? <ImageIcon className="w-4 h-4 text-gray-600" /> : <FileText className="w-4 h-4 text-gray-600" />}
+                                                                        </div>
+                                                                        <div className="flex-1 min-w-0">
+                                                                            <p className="font-medium text-gray-900 text-xs sm:text-sm truncate">{a.name}</p>
+                                                                            <p className="text-xs text-gray-500">{a.asset_type.toUpperCase()}</p>
+                                                                        </div>
+                                                                        <button onClick={() => window.open(a.file_url, '_blank')} className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
+                                                                            <Download className="w-4 h-4 text-gray-600" />
+                                                                        </button>
+                                                                    </div>
+                                                                ))
+                                                            ) : (
+                                                                <div className="px-4 py-3 text-xs text-gray-500">No assets in this module yet.</div>
+                                                            )
+                                                        ) : (
+                                                            <div className="px-4 py-3 text-xs text-gray-500 flex items-center gap-2">
+                                                                <Lock className="w-4 h-4" /> Enroll to view module assets
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>

@@ -1,8 +1,9 @@
-import { Clock, Users, Star, Play, CircleCheck as CheckCircle, BookOpen } from "lucide-react";
+import { Clock, Users, Star, Play, CircleCheck as CheckCircle, BookOpen, Building2 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { fetchWithAuth } from "@/lib/api";
 import Link from "next/link";
+import { API_ENDPOINTS } from "@/lib/config";
 
 interface Course {
     id: string;
@@ -14,6 +15,7 @@ interface Course {
     currency: string;
     is_free: boolean;
     thumbnail_url: string | null;
+    course_type?: 'public' | 'corporate';
     tutor: {
         id: string;
         first_name: string;
@@ -37,7 +39,7 @@ export default function CourseGrid() {
             setLoading(true);
             
             // Fetch all courses
-            const coursesResponse = await fetchWithAuth('https://api.traliq.com/courses');
+            const coursesResponse = await fetchWithAuth(API_ENDPOINTS.courses.list);
             
             if (coursesResponse.ok) {
                 const coursesData = await coursesResponse.json();
@@ -91,14 +93,81 @@ export default function CourseGrid() {
         );
     }
 
+    const corporateCourses = courses.filter(c => c.course_type === 'corporate');
+    const publicCourses = courses.filter(c => (c.course_type || 'public') === 'public');
+
     return (
-        <div className="space-y-8">
-            {/* All Courses */}
-            {courses.length > 0 ? (
+        <div className="space-y-12">
+            {/* Corporate Courses */}
+            {(corporateCourses.length > 0) && (
             <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">All Courses</h2>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-gray-900">Corporate Courses</h2>
+                    <span className="inline-flex items-center gap-2 text-sm text-gray-600">
+                        <Building2 className="w-4 h-4" /> For teams & organizations
+                    </span>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {courses.map((course, index) => (
+                    {corporateCourses.map((course, index) => (
+                        <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
+                            <div className="relative h-40">
+                                <Image
+                                    src={course.thumbnail_url || getDefaultThumbnail(index)}
+                                    alt={course.title}
+                                    width={500}
+                                    height={500}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute top-3 left-3">
+                                    <span className="bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-1 rounded-full text-xs font-medium">
+                                        {course.level}
+                                    </span>
+                                </div>
+                                <div className="absolute top-3 right-3">
+                                    <span className="bg-indigo-600 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-sm">Corporate</span>
+                                </div>
+                                {course.is_free && (
+                                    <div className="absolute bottom-3 right-3">
+                                        <span className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold">FREE</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="p-5 flex flex-col flex-1">
+                                <h3 className="text-lg font-bold text-gray-900 mb-2 flex-1 line-clamp-2">{course.title}</h3>
+                                <p className="text-gray-600 text-sm mb-4">by {course.tutor.first_name} {course.tutor.last_name}</p>
+
+                                <div className="flex items-center justify-between text-xs text-gray-500 mb-6">
+                                    <div className="flex items-center gap-1">
+                                        <Users className="w-4 h-4" />
+                                        <span>{course.attendee_count || 0} students</span>
+                                    </div>
+                                    <div className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                                        {course.category}
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center justify-between mt-auto">
+                                    <span className="text-2xl font-bold text-gray-900">
+                                        {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
+                                    </span>
+                                    <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
+                                        View Course
+                                    </button>
+                                </div>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+            )}
+
+            {/* Public Courses */}
+            {(publicCourses.length > 0) ? (
+            <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Public Courses</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {publicCourses.map((course, index) => (
                         <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
                             <div className="relative h-40">
                                 <Image
@@ -115,9 +184,7 @@ export default function CourseGrid() {
                                 </div>
                                 {course.is_free && (
                                     <div className="absolute top-3 right-3">
-                                        <span className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold">
-                                            FREE
-                                        </span>
+                                        <span className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold">FREE</span>
                                     </div>
                                 )}
                             </div>

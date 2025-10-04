@@ -4,7 +4,7 @@
  */
 
 // Use environment variable or fallback to local API
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.traliq.com';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -30,10 +30,28 @@ export const API_ENDPOINTS = {
     history: `${API_BASE_URL}/api/payments/history`,
   },
   
+  // Users
+  users: {
+    me: `${API_BASE_URL}/api/users/me`,
+    role: `${API_BASE_URL}/api/users/me/role`,
+    profile: `${API_BASE_URL}/api/user/profile`,
+  },
+  
   // Course endpoints
   courses: {
+    list: `${API_BASE_URL}/courses`,
+    detail: (courseId: string) => `${API_BASE_URL}/courses/${courseId}`,
+    modules: (courseId: string) => `${API_BASE_URL}/courses/${courseId}/modules`,
+    assets: (courseId: string) => `${API_BASE_URL}/courses/${courseId}/assets`,
+    enroll: (courseId: string) => `${API_BASE_URL}/courses/${courseId}/enroll`,
     sessionStatus: (courseId: string) => `${API_BASE_URL}/courses/${courseId}/session-status`,
     join: (courseId: string) => `${API_BASE_URL}/courses/${courseId}/join`,
     leave: (courseId: string) => `${API_BASE_URL}/courses/${courseId}/leave`,
   },
+
+  // Enrollments
+  enrollments: {
+    mine: `${API_BASE_URL}/users/me/enrollments`,
+  },
 };
+
