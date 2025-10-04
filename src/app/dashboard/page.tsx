@@ -3,8 +3,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { fetchWithAuth } from '@/lib/api';
 import { useSearchParams } from 'next/navigation';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import DashboardOverview from '@/components/dashboard/DashboardOverview';
 import ProgressSection from '@/components/dashboard/ProgressSection';
 
@@ -18,7 +16,6 @@ interface UserData {
 function DashboardContent() {
     const searchParams = useSearchParams();
     const [activeTab, setActiveTab] = useState('overview');
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [user, setUser] = useState<UserData | null>(null);
 
     useEffect(() => {
@@ -59,29 +56,8 @@ function DashboardContent() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-                        <DashboardHeader
-                user={user}
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-            />
-
-            <div className="flex">
-                <DashboardSidebar
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                    sidebarOpen={sidebarOpen}
-                    setSidebarOpen={setSidebarOpen}
-                    userRole={user?.role || 'learner'}
-                    user={user}
-                />
-
-                <main className="flex-1 lg:ml-64 p-6 lg:p-8">
-                    <div className="max-w-7xl mx-auto">
-                        {renderContent()}
-                    </div>
-                </main>
-            </div>
+        <div className="max-w-7xl mx-auto">
+            {renderContent()}
         </div>
     );
 }

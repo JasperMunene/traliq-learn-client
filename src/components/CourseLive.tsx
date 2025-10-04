@@ -17,8 +17,6 @@ import {
     UserCircle,
     Clock
 } from "lucide-react";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { fetchWithAuth } from '@/lib/api';
 import { API_ENDPOINTS } from '@/lib/config';
 
@@ -65,7 +63,6 @@ export default function CourseLive({ courseId }: { courseId: string }) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [sessionStatus, setSessionStatus] = useState<SessionStatus | null>(null);
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [chatMessage, setChatMessage] = useState("");
     const [user, setUser] = useState<UserData | null>(null);
@@ -286,16 +283,8 @@ export default function CourseLive({ courseId }: { courseId: string }) {
     const isTutor = sessionStatus?.is_tutor;
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <DashboardHeader user={user} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-            <div className="flex">
-                <DashboardSidebar
-                    activeTab={''}
-                    setActiveTab={() => {}}
-                    sidebarOpen={sidebarOpen}
-                    setSidebarOpen={setSidebarOpen}
-                />
-                <main className="flex-1 lg:ml-64">
+        <div className="bg-gray-50">
+            <div className="flex-1">
                     <div className="flex flex-col h-screen">
                         {/* Modern Header with Status Bar */}
                         <div className="bg-white border-b border-gray-200 shrink-0">
@@ -610,8 +599,7 @@ export default function CourseLive({ courseId }: { courseId: string }) {
                             </div>
                         </div>
                     </div>
-                </main>
-            </div>
+                </div>
         </div>
     );
 }

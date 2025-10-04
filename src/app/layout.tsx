@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Manrope, Poppins } from "next/font/google";
+import { Outfit, Poppins } from "next/font/google";
 import "./globals.css";
 import TokenRefreshProvider from "@/components/TokenRefreshProvider";
 
-const manrope = Manrope({
+const outfit = Outfit({
   subsets: ["latin"],
     weight: ["400", "500", "600", "700", "800"],
     variable: "--font-geist-sans",
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-x-hidden">
       <body
-        className={`${manrope.className} ${poppins.variable} antialiased overflow-x-hidden`}
+        className={`${outfit.className} ${poppins.variable} antialiased overflow-x-hidden`}
       >
         <TokenRefreshProvider>
           {children}

@@ -36,7 +36,7 @@ export default function HeroSection() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-wrap gap-4 pt-4">
-                            <a href="#courses" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                            <a href="#courses" className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors font-medium">
                                 Browse Courses
                             </a>
                             <a href="#pricing" className="bg-gray-100 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">
@@ -51,16 +51,16 @@ export default function HeroSection() {
                         <div className="space-y-4">
                             <h3 className="text-gray-700 font-medium">Popular AI Topics</h3>
                             <div className="flex flex-wrap gap-2 sm:gap-3">
-                                <span className="bg-green-200 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                                <span className="bg-gray-200 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     Machine Learning
                                 </span>
                                 <span className="bg-gray-300 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     Deep Learning
                                 </span>
-                                <span className="bg-blue-200 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                                <span className="bg-gray-200 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     Computer Vision
                                 </span>
-                                <span className="bg-yellow-200 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                                <span className="bg-gray-100 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     Natural Language Processing
                                 </span>
                             </div>
@@ -103,7 +103,7 @@ export default function HeroSection() {
                                 </div>
                                 {/* AI Badge */}
                                 <div className="absolute bottom-3 right-3">
-                                    <div className="bg-orange-500 text-white px-2 py-1 rounded-md text-xs font-semibold shadow-sm">
+                                    <div className="bg-black text-white px-2 py-1 rounded-md text-xs font-semibold shadow-sm">
                                         AI
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@ export default function HeroSection() {
 
                         <div className="grid grid-cols-2 gap-4">
                             {/* Bottom Left Card - Community Video */}
-                            <div className="relative bg-blue-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 aspect-[3/4] group">
+                            <div className="relative bg-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 aspect-[3/4] group">
                                 <video
                                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                                     autoPlay
@@ -127,7 +127,7 @@ export default function HeroSection() {
                                     />
                                 </video>
                                 {/* Subtle overlay for better visual integration */}
-                                <div className="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
+                                <div className="absolute inset-0 bg-black/5 pointer-events-none"></div>
                             </div>
 
 
@@ -146,13 +146,13 @@ export default function HeroSection() {
 
                                 {/* Progress Bars */}
                                 <div className="flex items-end justify-between h-12 sm:h-16 gap-1">
-                                    <div className="bg-blue-200 h-1/4 w-full rounded-t"></div>
-                                    <div className="bg-blue-300 h-2/5 w-full rounded-t"></div>
-                                    <div className="bg-blue-400 h-3/4 w-full rounded-t"></div>
-                                    <div className="bg-blue-300 h-3/5 w-full rounded-t"></div>
-                                    <div className="bg-blue-400 h-full w-full rounded-t"></div>
-                                    <div className="bg-blue-200 h-2/5 w-full rounded-t"></div>
-                                    <div className="bg-blue-100 h-1/4 w-full rounded-t"></div>
+                                    <div className="bg-gray-200 h-1/4 w-full rounded-t"></div>
+                                    <div className="bg-gray-300 h-2/5 w-full rounded-t"></div>
+                                    <div className="bg-gray-400 h-3/4 w-full rounded-t"></div>
+                                    <div className="bg-gray-300 h-3/5 w-full rounded-t"></div>
+                                    <div className="bg-gray-500 h-full w-full rounded-t"></div>
+                                    <div className="bg-gray-300 h-2/5 w-full rounded-t"></div>
+                                    <div className="bg-gray-200 h-1/4 w-full rounded-t"></div>
                                 </div>
 
                                 <div className="flex justify-between text-xs text-gray-400 mt-2">

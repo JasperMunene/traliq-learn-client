@@ -1,4 +1,4 @@
-import { Clock, Users, Star, Play, CircleCheck as CheckCircle, BookOpen, Building2 } from "lucide-react";
+import { Users, CircleCheck as CheckCircle, BookOpen, Building2 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { fetchWithAuth } from "@/lib/api";
@@ -70,7 +70,7 @@ export default function CourseGrid() {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-gray-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-gray-600">Loading courses...</p>
                 </div>
             </div>
@@ -84,7 +84,7 @@ export default function CourseGrid() {
                     <p className="text-red-600 mb-4">{error}</p>
                     <button 
                         onClick={fetchCourses}
-                        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition-colors"
                     >
                         Try Again
                     </button>
@@ -124,11 +124,11 @@ export default function CourseGrid() {
                                     </span>
                                 </div>
                                 <div className="absolute top-3 right-3">
-                                    <span className="bg-indigo-600 text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-sm">Corporate</span>
+                                    <span className="bg-black text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-sm">Corporate</span>
                                 </div>
                                 {course.is_free && (
                                     <div className="absolute bottom-3 right-3">
-                                        <span className="bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-bold">FREE</span>
+                                        <span className="bg-black text-white px-2.5 py-1 rounded-full text-xs font-bold">FREE</span>
                                     </div>
                                 )}
                             </div>
@@ -151,7 +151,7 @@ export default function CourseGrid() {
                                     <span className="text-2xl font-bold text-gray-900">
                                         {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
                                     </span>
-                                    <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium">
+                                    <button className="bg-black text-white px-5 py-2.5 rounded-lg hover:bg-gray-900 transition-colors duration-200 text-sm font-medium">
                                         View Course
                                     </button>
                                 </div>
@@ -226,7 +226,7 @@ export default function CourseGrid() {
                     <p className="text-gray-600 mb-6">Start your learning journey by exploring our courses</p>
                     <Link
                         href="/dashboard"
-                        className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                        className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors"
                     >
                         Explore Courses
                     </Link>
