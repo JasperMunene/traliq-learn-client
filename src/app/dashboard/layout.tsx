@@ -33,14 +33,16 @@ function DashboardShell({
         : "lg:ml-[90px]";
 
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
             <AppSidebar user={user} />
             <Backdrop />
             <div
-                className={`flex-1 transition-all  duration-300 ease-in-out ${mainContentMargin}`}
+                className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${mainContentMargin}`}
             >
                 <AppHeader user={user} />
-                <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
+                <main className="flex-1 overflow-y-auto">
+                    <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
+                </main>
             </div>
         </div>
     );

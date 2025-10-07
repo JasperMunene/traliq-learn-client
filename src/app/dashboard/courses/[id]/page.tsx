@@ -352,10 +352,10 @@ export default function SingleCoursePage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
                 <div className="text-center">
-                    <Loader2 className="w-16 h-16 text-gray-900 animate-spin mx-auto mb-4" />
-                    <p className="text-gray-600">Loading course details...</p>
+                    <Loader2 className="w-16 h-16 text-brand-500 dark:text-brand-400 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-600 dark:text-gray-400">Loading course details...</p>
                 </div>
             </div>
         );
@@ -363,12 +363,12 @@ export default function SingleCoursePage() {
 
     if (error || !course) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
                 <div className="text-center">
-                    <p className="text-gray-800 mb-4">{error || 'Course not found'}</p>
+                    <p className="text-gray-800 dark:text-gray-200 mb-4">{error || 'Course not found'}</p>
                     <button 
                         onClick={fetchCourseDetails}
-                        className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition-colors"
+                        className="bg-brand-600 dark:bg-brand-500 text-white px-6 py-2 rounded-lg hover:bg-brand-700 dark:hover:bg-brand-600 transition-colors"
                     >
                         Try Again
                     </button>
@@ -384,10 +384,10 @@ export default function SingleCoursePage() {
     const duration = durationHours > 0 ? `${durationHours} hours` : 'TBD';
 
     return (
-        <div className="bg-gray-50">
+        <div className="bg-gray-50 dark:bg-gray-950">
             <div className="flex-1">
                     {/* Back to Courses Link */}
-                    <div className="bg-black">
+                    <div className="bg-gray-900 dark:bg-gray-950">
                         <div className="max-w-7xl mx-auto px-4 py-2.5 sm:py-3">
                             <button
                                 onClick={() => router.push('/dashboard')}
@@ -461,73 +461,73 @@ export default function SingleCoursePage() {
                     </div>
 
                     {/* Main Content */}
-                    <div className="bg-gradient-to-b from-gray-50 to-white">
+                    <div className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
                         <div className="max-w-7xl mx-auto px-4 py-6 lg:py-8 lg:px-6">
                             <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
                                 {/* Left Column - Course Info & Tabs */}
                                 <div className="lg:col-span-2 space-y-4 lg:space-y-6">
                                     {/* Course Header */}
-                                    <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 lg:p-8">
-                                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4 lg:mb-6 leading-tight break-words">{course.title}</h1>
+                                    <div className="bg-white dark:bg-gray-900 rounded-xl lg:rounded-2xl border border-gray-100 dark:border-gray-800 p-4 sm:p-6 lg:p-8" style={{ boxShadow: 'var(--shadow-theme-lg)' }}>
+                                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 lg:mb-6 leading-tight break-words">{course.title}</h1>
 
                                         <div className="flex flex-wrap items-center gap-2 sm:gap-3 lg:gap-5 text-xs sm:text-sm mb-4 lg:mb-6">
-                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-100 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200">
-                                                <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 fill-gray-700" />
-                                                <span className="font-bold text-gray-900">{staticData.rating}</span>
-                                                <span className="text-gray-600 hidden sm:inline">rating</span>
+                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200 dark:border-gray-700">
+                                                <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300 fill-gray-700 dark:fill-gray-300" />
+                                                <span className="font-bold text-gray-900 dark:text-white">{staticData.rating}</span>
+                                                <span className="text-gray-600 dark:text-gray-400 hidden sm:inline">rating</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-100 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200">
-                                                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                                                <span className="font-semibold text-gray-900">{course.attendee_count || 0}</span>
-                                                <span className="text-gray-600 hidden sm:inline">students</span>
+                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200 dark:border-gray-700">
+                                                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
+                                                <span className="font-semibold text-gray-900 dark:text-white">{course.attendee_count || 0}</span>
+                                                <span className="text-gray-600 dark:text-gray-400 hidden sm:inline">students</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-100 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200">
-                                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                                                <span className="font-semibold text-gray-900 whitespace-nowrap">{duration}</span>
+                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200 dark:border-gray-700">
+                                                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
+                                                <span className="font-semibold text-gray-900 dark:text-white whitespace-nowrap">{duration}</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-100 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200">
-                                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                                                <span className="font-semibold text-gray-900">{course.level}</span>
+                                            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200 dark:border-gray-700">
+                                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 dark:text-gray-300" />
+                                                <span className="font-semibold text-gray-900 dark:text-white">{course.level}</span>
                                             </div>
-                                            <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 bg-black text-white rounded-full text-xs font-bold shadow-md whitespace-nowrap">
+                                            <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 bg-gray-900 dark:bg-gray-800 text-white rounded-full text-xs font-bold shadow-md whitespace-nowrap">
                                                 {course.category}
                                             </div>
                                             {course.course_type === 'corporate' && (
-                                                <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 bg-black text-white rounded-full text-xs font-bold shadow-md whitespace-nowrap">
+                                                <div className="px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 bg-gray-900 dark:bg-gray-800 text-white rounded-full text-xs font-bold shadow-md whitespace-nowrap">
                                                     Corporate
                                                 </div>
                                             )}
                                         </div>
 
-                                    <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 rounded-xl border border-gray-200">
-                                        <div className="w-12 h-12 sm:w-14 sm:h-14 bg-black rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg shadow-lg flex-shrink-0">
+                                    <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                        <div className="w-12 h-12 sm:w-14 sm:h-14 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg shadow-lg flex-shrink-0">
                                             {course.tutor.first_name[0]}{course.tutor.last_name[0]}
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-xs sm:text-sm text-gray-500 font-medium">Instructor</p>
-                                            <p className="text-sm sm:text-base font-bold text-gray-900 truncate">{course.tutor.first_name} {course.tutor.last_name}</p>
-                                            <p className="text-xs sm:text-sm text-gray-600 truncate">{course.tutor.bio || 'Expert Course Instructor'}</p>
+                                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium">Instructor</p>
+                                            <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate">{course.tutor.first_name} {course.tutor.last_name}</p>
+                                            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">{course.tutor.bio || 'Expert Course Instructor'}</p>
                                         </div>
                                     </div>
 
                                     {/* Enrollment Section */}
                                     <div className="space-y-3">
                                         {enrollmentSuccess && (
-                                            <div className="p-4 bg-gray-100 border border-gray-300 rounded-lg">
-                                                <p className="text-gray-900 font-medium">✓ Successfully enrolled! Redirecting...</p>
+                                            <div className="p-4 bg-success-50 dark:bg-success-900/20 border border-success-300 dark:border-success-700 rounded-lg">
+                                                <p className="text-success-900 dark:text-success-300 font-medium">✓ Successfully enrolled! Redirecting...</p>
                                             </div>
                                         )}
                                         
                                         {enrollmentError && (
-                                            <div className="p-4 bg-gray-100 border border-gray-300 rounded-lg">
-                                                <p className="text-gray-900 text-sm">{enrollmentError}</p>
+                                            <div className="p-4 bg-error-50 dark:bg-error-900/20 border border-error-300 dark:border-error-700 rounded-lg">
+                                                <p className="text-error-900 dark:text-error-300 text-sm">{enrollmentError}</p>
                                             </div>
                                         )}
 
-                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 bg-gray-50 rounded-xl border-2 border-gray-200 shadow-sm">
+                                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 shadow-sm">
                                             <div className="min-w-0">
-                                                <p className="text-xs sm:text-sm text-gray-600 font-medium mb-1">Course Price</p>
-                                                <p className="text-2xl sm:text-3xl font-extrabold text-gray-900 break-words">
+                                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium mb-1">Course Price</p>
+                                                <p className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white break-words">
                                                     {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
                                                 </p>
                                             </div>
@@ -535,7 +535,7 @@ export default function SingleCoursePage() {
                                                 <button 
                                                     onClick={handleEnrollment}
                                                     disabled={enrolling || enrollmentSuccess}
-                                                    className="w-full sm:w-auto bg-black text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg hover:bg-gray-900 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base whitespace-nowrap"
+                                                    className="w-full sm:w-auto bg-brand-600 dark:bg-brand-500 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg hover:bg-brand-700 dark:hover:bg-brand-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base whitespace-nowrap"
                                                 >
                                                     {enrolling ? (
                                                         <>
@@ -574,8 +574,8 @@ export default function SingleCoursePage() {
                                 </div>
 
                                 {/* Tabs */}
-                                <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                                    <div className="border-b border-gray-200 bg-gray-50">
+                                <div className="bg-white dark:bg-gray-900 rounded-xl lg:rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden" style={{ boxShadow: 'var(--shadow-theme-lg)' }}>
+                                    <div className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
                                         <div className="flex">
                                             {["overview", "resources", "discussion"].map((tab) => (
                                                 <button
@@ -583,13 +583,13 @@ export default function SingleCoursePage() {
                                                     onClick={() => setActiveTab(tab)}
                                                     className={`flex-1 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm font-bold capitalize transition-all relative ${
                                                         activeTab === tab
-                                                            ? "text-gray-900 bg-white"
-                                                            : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                                                            ? "text-gray-900 dark:text-white bg-white dark:bg-gray-900"
+                                                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-gray-900/50"
                                                     }`}
                                                 >
                                                     {tab}
                                                     {activeTab === tab && (
-                                                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-900 rounded-t-full"></div>
+                                                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-600 dark:bg-brand-500 rounded-t-full"></div>
                                                     )}
                                                 </button>
                                             ))}
@@ -601,16 +601,16 @@ export default function SingleCoursePage() {
                                         {activeTab === "overview" && (
                                             <div className="space-y-4">
                                                 <div>
-                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3">About This Course</h3>
-                                                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4">
+                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-3">About This Course</h3>
+                                                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
                                                         {course.description}
                                                     </p>
                                                 </div>
 
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 rounded-lg">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                                                     <div>
-                                                        <p className="text-xs sm:text-sm text-gray-600 mb-1">Start Date</p>
-                                                        <p className="font-semibold text-gray-900 text-sm sm:text-base break-words">
+                                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Start Date</p>
+                                                        <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base break-words">
                                                             {course.scheduled_start ? new Date(course.scheduled_start).toLocaleDateString('en-US', {
                                                                 month: 'long',
                                                                 day: 'numeric',
@@ -621,8 +621,8 @@ export default function SingleCoursePage() {
                                                         </p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-xs sm:text-sm text-gray-600 mb-1">End Date</p>
-                                                        <p className="font-semibold text-gray-900 text-sm sm:text-base break-words">
+                                                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">End Date</p>
+                                                        <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base break-words">
                                                             {course.scheduled_end ? new Date(course.scheduled_end).toLocaleDateString('en-US', {
                                                                 month: 'long',
                                                                 day: 'numeric',
@@ -635,7 +635,7 @@ export default function SingleCoursePage() {
                                                 </div>
 
                                                 <div>
-                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3">What You&apos;ll Learn</h3>
+                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-3">What You&apos;ll Learn</h3>
                                                     <ul className="space-y-2">
                                                         {[
                                                             "Build and train neural networks from scratch",
@@ -645,8 +645,8 @@ export default function SingleCoursePage() {
                                                             "Understand deep learning mathematics"
                                                         ].map((item, i) => (
                                                             <li key={i} className="flex items-start gap-2">
-                                                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900 flex-shrink-0 mt-0.5" />
-                                                                <span className="text-sm sm:text-base text-gray-600">{item}</span>
+                                                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-brand-600 dark:text-brand-400 flex-shrink-0 mt-0.5" />
+                                                                <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{item}</span>
                                                             </li>
                                                         ))}
                                                     </ul>
@@ -658,7 +658,7 @@ export default function SingleCoursePage() {
                                         {activeTab === "resources" && (
                                             <div className="space-y-4">
                                                 {!canAccessAssets && (
-                                                    <div className="p-4 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-900">
+                                                    <div className="p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-300">
                                                         Enroll to access downloadable materials and resources.
                                                     </div>
                                                 )}
@@ -667,26 +667,26 @@ export default function SingleCoursePage() {
                                                         {/* Course-level assets */}
                                                         {getCourseLevelAssets().length > 0 && (
                                                             <div>
-                                                                <h4 className="text-sm font-bold text-gray-900 mb-2">General Resources</h4>
+                                                                <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-2">General Resources</h4>
                                                                 <div className="space-y-2">
                                                                     {getCourseLevelAssets().map((a) => (
-                                                                        <div key={a.id} className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                                                        <div key={a.id} className="flex items-center justify-between gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                                                                             <div className="flex items-center gap-3 min-w-0 flex-1">
-                                                                                <div className="w-9 h-9 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                                                    {a.asset_type === 'pdf' || a.asset_type === 'document' ? <FileIcon className="w-4 h-4 text-gray-600" />
-                                                                                        : a.asset_type === 'image' ? <ImageIcon className="w-4 h-4 text-gray-600" />
-                                                                                        : a.asset_type === 'video' ? <VideoIcon className="w-4 h-4 text-gray-600" />
-                                                                                        : a.asset_type === 'audio' ? <AudioIcon className="w-4 h-4 text-gray-600" />
-                                                                                        : a.asset_type === 'zip' ? <ZipIcon className="w-4 h-4 text-gray-600" />
-                                                                                        : <FileText className="w-4 h-4 text-gray-600" />}
+                                                                                <div className="w-9 h-9 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                                                    {a.asset_type === 'pdf' || a.asset_type === 'document' ? <FileIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                                                                                        : a.asset_type === 'image' ? <ImageIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                                                                                        : a.asset_type === 'video' ? <VideoIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                                                                                        : a.asset_type === 'audio' ? <AudioIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                                                                                        : a.asset_type === 'zip' ? <ZipIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                                                                                        : <FileText className="w-4 h-4 text-gray-600 dark:text-gray-400" />}
                                                                                 </div>
                                                                                 <div className="min-w-0 flex-1">
-                                                                                    <p className="font-medium text-gray-900 text-sm truncate">{a.name}</p>
-                                                                                    <p className="text-xs text-gray-500">{a.asset_type.toUpperCase()}</p>
+                                                                                    <p className="font-medium text-gray-900 dark:text-white text-sm truncate">{a.name}</p>
+                                                                                    <p className="text-xs text-gray-500 dark:text-gray-400">{a.asset_type.toUpperCase()}</p>
                                                                                 </div>
                                                                             </div>
-                                                                            <button onClick={() => window.open(a.file_url, '_blank')} className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
-                                                                                <Download className="w-5 h-5 text-gray-600" />
+                                                                            <button onClick={() => window.open(a.file_url, '_blank')} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors">
+                                                                                <Download className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                                                                             </button>
                                                                         </div>
                                                                     ))}
@@ -737,17 +737,17 @@ export default function SingleCoursePage() {
                                             <div className="space-y-4 sm:space-y-6">
                                                 {/* Ask Question */}
                                                 <div>
-                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Ask a Question</h3>
+                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Ask a Question</h3>
                                                     <div className="flex gap-2 sm:gap-3">
                                                         <textarea
                                                             value={question}
                                                             onChange={(e) => setQuestion(e.target.value)}
                                                             placeholder="Type your question here..."
-                                                            className="flex-1 p-2.5 sm:p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none text-sm sm:text-base"
+                                                            className="flex-1 p-2.5 sm:p-3 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-400 resize-none text-sm sm:text-base"
                                                             rows={3}
                                                         />
                                                     </div>
-                                                    <button className="mt-3 bg-gray-900 hover:bg-gray-800 text-white px-4 sm:px-6 py-2 rounded-xl font-medium transition-colors flex items-center gap-2 text-sm sm:text-base">
+                                                    <button className="mt-3 bg-brand-600 dark:bg-brand-500 hover:bg-brand-700 dark:hover:bg-brand-600 text-white px-4 sm:px-6 py-2 rounded-xl font-medium transition-colors flex items-center gap-2 text-sm sm:text-base">
                                                         <Send className="w-4 h-4" />
                                                         <span>Post Question</span>
                                                     </button>
@@ -755,21 +755,21 @@ export default function SingleCoursePage() {
 
                                                 {/* Questions List */}
                                                 <div>
-                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Recent Discussions</h3>
+                                                    <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Recent Discussions</h3>
                                                     <div className="space-y-3 sm:space-y-4">
                                                         {discussions.map((discussion, i) => (
-                                                            <div key={i} className="p-3 sm:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer">
+                                                            <div key={i} className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
                                                                 <div className="flex items-start gap-2 sm:gap-3">
-                                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-900 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm flex-shrink-0">
+                                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-brand-600 dark:bg-brand-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm flex-shrink-0">
                                                                         {discussion.avatar}
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1">
-                                                                            <p className="font-semibold text-gray-900 text-sm sm:text-base">{discussion.user}</p>
-                                                                            <span className="text-xs text-gray-500">{discussion.time}</span>
+                                                                            <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">{discussion.user}</p>
+                                                                            <span className="text-xs text-gray-500 dark:text-gray-400">{discussion.time}</span>
                                                                         </div>
-                                                                        <p className="text-gray-700 mb-2 text-sm sm:text-base break-words">{discussion.question}</p>
-                                                                        <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                                                                        <p className="text-gray-700 dark:text-gray-300 mb-2 text-sm sm:text-base break-words">{discussion.question}</p>
+                                                                        <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                                                                             <MessageSquare className="w-4 h-4" />
                                                                             <span>{discussion.replies} replies</span>
                                                                         </div>
@@ -788,55 +788,55 @@ export default function SingleCoursePage() {
                             {/* Right Column - Course Content & Episodes */}
                             <div className="lg:col-span-1 space-y-4 lg:space-y-6">
                                 {/* Course Content */}
-                                <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 lg:sticky lg:top-6">
+                                <div className="bg-white dark:bg-gray-900 rounded-xl lg:rounded-2xl border border-gray-100 dark:border-gray-800 p-4 sm:p-6 lg:sticky lg:top-6" style={{ boxShadow: 'var(--shadow-theme-lg)' }}>
                                     <div className="flex items-center justify-between mb-4 sm:mb-6">
-                                        <h3 className="text-lg sm:text-xl font-extrabold text-gray-900">Course Content</h3>
-                                        <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group">
-                                            <Share2 className="w-5 h-5 text-gray-600 group-hover:text-gray-900" />
+                                        <h3 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">Course Content</h3>
+                                        <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors group">
+                                            <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
                                         </button>
                                     </div>
 
                                     <div className="space-y-2 max-h-[calc(100vh-16rem)] overflow-y-auto">
                                         {modules.map((module) => (
-                                            <div key={module.id} className="border border-gray-200 rounded-xl overflow-hidden">
+                                            <div key={module.id} className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
                                                 <button
                                                     onClick={() => setExpandedModule(expandedModule === module.id ? null : module.id)}
-                                                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors"
+                                                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                                                 >
                                                     <div className="text-left min-w-0 flex-1 mr-2">
-                                                        <p className="font-semibold text-gray-900 text-xs sm:text-sm truncate">{module.title}</p>
-                                                        <p className="text-xs text-gray-500">{module.duration_minutes ? `${module.duration_minutes} min` : '—'}</p>
+                                                        <p className="font-semibold text-gray-900 dark:text-white text-xs sm:text-sm truncate">{module.title}</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{module.duration_minutes ? `${module.duration_minutes} min` : '—'}</p>
                                                     </div>
                                                     <ChevronDown
-                                                        className={`w-5 h-5 text-gray-600 transition-transform ${
+                                                        className={`w-5 h-5 text-gray-600 dark:text-gray-400 transition-transform ${
                                                             expandedModule === module.id ? "rotate-180" : ""
                                                         }`}
                                                     />
                                                 </button>
 
                                                 {expandedModule === module.id && (
-                                                    <div className="border-t border-gray-200">
+                                                    <div className="border-t border-gray-200 dark:border-gray-800">
                                                         {canAccessAssets ? (
                                                             getAssetsForModule(module.id).length > 0 ? (
                                                                 getAssetsForModule(module.id).map((a) => (
-                                                                    <div key={a.id} className="w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-100 last:border-b-0">
+                                                                    <div key={a.id} className="w-full px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left border-b border-gray-100 dark:border-gray-800 last:border-b-0">
                                                                         <div className="w-5 h-5 flex items-center justify-center">
-                                                                            {a.asset_type === 'video' ? <VideoIcon className="w-4 h-4 text-gray-600" /> : a.asset_type === 'pdf' || a.asset_type === 'document' ? <FileIcon className="w-4 h-4 text-gray-600" /> : a.asset_type === 'image' ? <ImageIcon className="w-4 h-4 text-gray-600" /> : <FileText className="w-4 h-4 text-gray-600" />}
+                                                                            {a.asset_type === 'video' ? <VideoIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" /> : a.asset_type === 'pdf' || a.asset_type === 'document' ? <FileIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" /> : a.asset_type === 'image' ? <ImageIcon className="w-4 h-4 text-gray-600 dark:text-gray-400" /> : <FileText className="w-4 h-4 text-gray-600 dark:text-gray-400" />}
                                                                         </div>
                                                                         <div className="flex-1 min-w-0">
-                                                                            <p className="font-medium text-gray-900 text-xs sm:text-sm truncate">{a.name}</p>
-                                                                            <p className="text-xs text-gray-500">{a.asset_type.toUpperCase()}</p>
+                                                                            <p className="font-medium text-gray-900 dark:text-white text-xs sm:text-sm truncate">{a.name}</p>
+                                                                            <p className="text-xs text-gray-500 dark:text-gray-400">{a.asset_type.toUpperCase()}</p>
                                                                         </div>
-                                                                        <button onClick={() => window.open(a.file_url, '_blank')} className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
-                                                                            <Download className="w-4 h-4 text-gray-600" />
+                                                                        <button onClick={() => window.open(a.file_url, '_blank')} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                                                                            <Download className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                                                                         </button>
                                                                     </div>
                                                                 ))
                                                             ) : (
-                                                                <div className="px-4 py-3 text-xs text-gray-500">No assets in this module yet.</div>
+                                                                <div className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">No assets in this module yet.</div>
                                                             )
                                                         ) : (
-                                                            <div className="px-4 py-3 text-xs text-gray-500 flex items-center gap-2">
+                                                            <div className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2">
                                                                 <Lock className="w-4 h-4" /> Enroll to view module assets
                                                             </div>
                                                         )}

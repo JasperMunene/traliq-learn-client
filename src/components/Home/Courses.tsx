@@ -1,84 +1,52 @@
-import { Clock, Users } from "lucide-react";
+"use client";
+
+import { Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { API_ENDPOINTS } from "@/lib/config";
+
+interface Course {
+    id: string;
+    title: string;
+    category: string;
+    level: string;
+    price: number;
+    currency: string;
+    is_free: boolean;
+    thumbnail_url: string | null;
+    tutor: {
+        first_name: string;
+        last_name: string;
+    };
+    attendee_count: number;
+}
 
 export default function CoursesSection() {
-    const courses = [
-        {
-            title: "Machine Learning Fundamentals",
-            instructor: "Dr. Sarah Chen",
-            duration: "12 weeks",
-            students: "2,847",
-            rating: "4.9",
-            price: "KES 2990",
-            category: "Machine Learning",
-            image: "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800",
-            level: "Beginner",
-            isLive: true,
-            nextSession: "Today, 6:00 PM EST",
-            seatsLeft: 87,
-            totalSeats: 100
-        },
-        {
-            title: "Deep Learning with PyTorch",
-            instructor: "Alex Rodriguez",
-            duration: "16 weeks",
-            students: "1,934",
-            rating: "4.8",
-            price: "KES 3990",
-            category: "Deep Learning",
-            image: "https://images.pexels.com/photos/8386434/pexels-photo-8386434.jpeg?auto=compress&cs=tinysrgb&w=800",
-            level: "Advanced",
-            isLive: true,
-            nextSession: "Tomorrow, 8:00 PM EST",
-            seatsLeft: 23,
-            totalSeats: 100
-        },
-        {
-            title: "Natural Language Processing",
-            instructor: "Prof. Michael Kim",
-            duration: "10 weeks",
-            students: "3,156",
-            rating: "4.9",
-            price: "KES 3490",
-            category: "NLP",
-            image: "https://images.pexels.com/photos/8386422/pexels-photo-8386422.jpeg?auto=compress&cs=tinysrgb&w=800",
-            level: "Intermediate"
-        },
-        {
-            title: "Computer Vision Applications",
-            instructor: "Lisa Zhang",
-            duration: "14 weeks",
-            students: "1,679",
-            rating: "4.7",
-            price: "KES 4290",
-            category: "Computer Vision",
-            image: "https://images.pexels.com/photos/8386435/pexels-photo-8386435.jpeg?auto=compress&cs=tinysrgb&w=800",
-            level: "Advanced"
-        },
-        {
-            title: "AI Ethics & Responsible AI",
-            instructor: "Dr. James Wilson",
-            duration: "6 weeks",
-            students: "4,203",
-            rating: "4.8",
-            price: "KES 1990",
-            category: "AI Ethics",
-            image: "https://images.pexels.com/photos/8386433/pexels-photo-8386433.jpeg?auto=compress&cs=tinysrgb&w=800",
-            level: "All Levels"
-        },
-        {
-            title: "AI for Business Strategy",
-            instructor: "Emma Thompson",
-            duration: "8 weeks",
-            students: "2,567",
-            rating: "4.9",
-            price: "KES 2790",
-            category: "Business AI",
-            image: "https://images.pexels.com/photos/8386437/pexels-photo-8386437.jpeg?auto=compress&cs=tinysrgb&w=800",
-            level: "Beginner"
-        }
-    ];
+    const [courses, setCourses] = useState<Course[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch(API_ENDPOINTS.courses.list)
+            .then(res => res.json())
+            .then(data => {
+                setCourses((data.courses || []).slice(0, 6));
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
+    }, []);
+
+    const getDefaultThumbnail = (i: number) => {
+        const imgs = [
+            "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "https://images.pexels.com/photos/8386434/pexels-photo-8386434.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "https://images.pexels.com/photos/8386422/pexels-photo-8386422.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "https://images.pexels.com/photos/8386435/pexels-photo-8386435.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "https://images.pexels.com/photos/8386433/pexels-photo-8386433.jpeg?auto=compress&cs=tinysrgb&w=800",
+            "https://images.pexels.com/photos/8386437/pexels-photo-8386437.jpeg?auto=compress&cs=tinysrgb&w=800"
+        ];
+        return imgs[i % imgs.length];
+    };
 
     return (
         <section id="courses" className="bg-white px-6 py-20 lg:py-28">
@@ -95,22 +63,25 @@ export default function CoursesSection() {
 
                 {/* Courses Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    {courses.map((course, index) => (
-                        <div key={index} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors">
+                    {loading ? <div className="col-span-3 text-center py-12"><div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div></div> : courses.map((course, index) => (
+                        <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors">
                             {/* Course Image */}
                             <div className="relative h-48">
                                 <Image
-                                    src={course.image}
+                                    src={course.thumbnail_url || getDefaultThumbnail(index)}
                                     alt={course.title}
                                     width={500}
                                     height={500}
                                     className="w-full h-full object-cover"
                                 />
-                                {course.isLive && (
-                                    <div className="absolute top-3 left-3">
-                                        <span className="bg-blue-600 text-white px-2.5 py-1 rounded text-xs font-medium">
-                                            Live
-                                        </span>
+                                <div className="absolute top-3 left-3">
+                                    <span className="bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-1 rounded text-xs font-medium">
+                                        {course.level}
+                                    </span>
+                                </div>
+                                {course.is_free && (
+                                    <div className="absolute top-3 right-3">
+                                        <span className="bg-green-500 text-white px-2.5 py-1 rounded text-xs font-bold">FREE</span>
                                     </div>
                                 )}
                             </div>
@@ -122,28 +93,29 @@ export default function CoursesSection() {
                                 </h3>
 
                                 <p className="text-sm text-gray-600 mb-4">
-                                    {course.instructor}
+                                    by {course.tutor.first_name} {course.tutor.last_name}
                                 </p>
 
                                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
                                     <div className="flex items-center gap-1">
-                                        <Clock className="w-4 h-4" />
-                                        <span>{course.duration}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
                                         <Users className="w-4 h-4" />
-                                        <span>{course.students}</span>
+                                        <span>{course.attendee_count || 0} students</span>
+                                    </div>
+                                    <div className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                                        {course.category}
                                     </div>
                                 </div>
 
                                 <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                                    <span className="text-xl font-semibold text-gray-900">{course.price}</span>
+                                    <span className="text-xl font-semibold text-gray-900">
+                                        {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
+                                    </span>
                                     <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-                                        {course.isLive ? 'Join Live' : 'Enroll'}
+                                        View Course
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
 
