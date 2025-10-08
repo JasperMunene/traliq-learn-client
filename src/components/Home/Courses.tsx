@@ -22,19 +22,26 @@ interface Course {
     attendee_count: number;
 }
 
-export default function CoursesSection() {
+export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let mounted = true;
         fetch(API_ENDPOINTS.courses.list)
             .then(res => res.json())
             .then(data => {
+                if (!mounted) return;
                 setCourses((data.courses || []).slice(0, 6));
-                setLoading(false);
             })
-            .catch(() => setLoading(false));
-    }, []);
+            .catch(() => {})
+            .finally(() => {
+                if (!mounted) return;
+                setLoading(false);
+                onLoaded?.();
+            });
+        return () => { mounted = false };
+    }, [onLoaded]);
 
     const getDefaultThumbnail = (i: number) => {
         const imgs = [
@@ -63,7 +70,22 @@ export default function CoursesSection() {
 
                 {/* Courses Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    {loading ? <div className="col-span-3 text-center py-12"><div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div></div> : courses.map((course, index) => (
+                    {loading ? (
+                        Array.from({ length: 6 }).map((_, i) => (
+                            <div key={i} className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                                <div className="h-48 bg-gray-200 animate-pulse" />
+                                <div className="p-6">
+                                    <div className="h-5 bg-gray-200 rounded w-2/3 mb-3 animate-pulse" />
+                                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-4 animate-pulse" />
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="h-4 bg-gray-200 rounded w-20 animate-pulse" />
+                                        <div className="h-4 bg-gray-200 rounded w-16 animate-pulse" />
+                                    </div>
+                                    <div className="h-6 bg-gray-200 rounded w-24 animate-pulse" />
+                                </div>
+                            </div>
+                        ))
+                    ) : courses.map((course, index) => (
                         <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors">
                             {/* Course Image */}
                             <div className="relative h-48">
