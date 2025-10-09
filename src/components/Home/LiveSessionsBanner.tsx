@@ -1,18 +1,32 @@
 'use client'
 import { useState, useEffect } from 'react';
-import { Clock, Users, ArrowRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { API_ENDPOINTS } from "@/lib/config";
+import { Clock, Users, ArrowRight, Star, Award, Zap } from "lucide-react";
 
-export default function LiveSessionsBanner({ onLoaded }: { onLoaded?: () => void }) {
+export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => void }) {
     const [timeLeft, setTimeLeft] = useState({
         hours: 2,
         minutes: 15,
         seconds: 0
     });
 
-    // Recommended static courses (fetched from API once)
+    const featuredCourse = {
+        id: "1a735428-387b-4d59-831e-52518cf016c1",
+        title: "The No-Code AI Developer",
+        category: "Artificial Intelligence",
+        level: "Intermediate",
+        price: 150,
+        currency: "KES",
+        is_free: false,
+        thumbnail_url: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/wp1lcwdav1p1/5LELBX2Na6yiCXujFH04jB/2f1bad59326a3dd236906d1ef46cf885/Learner-Yvonne-J-USA.png?auto=format%2Ccompress&dpr=1&w=612&h=375&q=40&fit=crop",
+        tutor: { first_name: "Dr. Sarah", last_name: "Kimani" },
+        attendee_count: 124,
+        description: "Empower non-programmers to build simple AI-driven apps.",
+        highlights: ["Lifetime Access", "Certificate of Completion", "Real-world Projects", "Expert Instruction"],
+        originalPrice: 2999,
+        seatsLeft: 23,
+        totalSeats: 100
+    };
+
     interface Course {
         id: string;
         title: string;
@@ -27,10 +41,8 @@ export default function LiveSessionsBanner({ onLoaded }: { onLoaded?: () => void
     }
 
     const [recommended, setRecommended] = useState<Course[]>([]);
-    const [featured, setFeatured] = useState<Course | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // Countdown timer
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft(prev => {
@@ -53,17 +65,15 @@ export default function LiveSessionsBanner({ onLoaded }: { onLoaded?: () => void
         let mounted = true;
         const fetchCourses = async () => {
             try {
-                const res = await fetch(API_ENDPOINTS.courses.list);
+                const res = await fetch('/api/courses');
                 if (res.ok) {
                     const data = await res.json();
                     const list: Course[] = data.courses || [];
                     if (!mounted) return;
-                    // Pick a static featured course (first one) and two recommendations
-                    setFeatured(list[0] || null);
-                    setRecommended(list.slice(1, 3));
+                    setRecommended(list.slice(0, 2));
                 }
             } catch (e) {
-                // fail silently on homepage
+                // fail silently
             } finally {
                 if (!mounted) return;
                 setLoading(false);
@@ -77,148 +87,162 @@ export default function LiveSessionsBanner({ onLoaded }: { onLoaded?: () => void
     const getDefaultThumbnail = (index: number) => {
         const thumbnails = [
             "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400",
-            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400",
-            "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400",
-            "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400",
-            "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=400"
+            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400"
         ];
         return thumbnails[index % thumbnails.length];
     };
 
-    const upcomingSessions = [
-        {
-            title: "GPT-4 Prompt Engineering Masterclass",
-            time: "Today, 3:00 PM EST",
-            seatsLeft: 23,
-            totalSeats: 100,
-            isLive: false
-        },
-        {
-            title: "Machine Learning Fundamentals",
-            time: "Tomorrow, 6:00 PM EST",
-            seatsLeft: 87,
-            totalSeats: 100,
-            isLive: false
-        },
-        {
-            title: "Computer Vision Bootcamp",
-            time: "Wed, 8:00 PM EST",
-            seatsLeft: 12,
-            totalSeats: 100,
-            isLive: false
-        }
-    ];
-
     return (
-        <section id="live-sessions" className="bg-blue-600 text-white py-6 sm:py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-                    {/* Left: Urgency Message */}
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-                            <span className="text-sm sm:text-base font-bold">UPCOMING LIVE SESSION</span>
-                        </div>
-                    </div>
-
-                    {/* Center: Session Info */}
-                    <div className="flex-1 text-center lg:text-left">
-                        {loading ? (
-                            <div>
-                                <div className="h-6 bg-white/40 rounded w-3/4 mx-auto lg:mx-0 mb-2 animate-pulse" />
-                                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-                                    <div className="h-4 bg-white/30 rounded w-40 animate-pulse" />
-                                    <div className="h-4 bg-white/30 rounded w-32 animate-pulse" />
+        <section className="bg-gray-50 py-20 lg:py-28">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                {/* Main Featured Course */}
+                <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+                    <div className="grid lg:grid-cols-2 gap-0">
+                        {/* Left: Image */}
+                        <div className="relative h-64 lg:h-full min-h-[400px]">
+                            <img
+                                src={featuredCourse.thumbnail_url}
+                                alt={featuredCourse.title}
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                            
+                            {/* Floating badges */}
+                            <div className="absolute top-3 left-3">
+                                <span className="inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-gray-700 px-3 py-1.5 rounded text-sm font-medium">
+                                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                                    Featured
+                                </span>
+                            </div>
+                            
+                            <div className="absolute bottom-3 left-3 right-3">
+                                <div className="flex items-center gap-2 text-white">
+                                    <span className="bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-1 rounded text-xs font-medium">
+                                        {featuredCourse.level}
+                                    </span>
+                                    <span className="bg-white/95 backdrop-blur-sm text-gray-700 px-2.5 py-1 rounded text-xs font-medium">
+                                        {featuredCourse.category}
+                                    </span>
                                 </div>
                             </div>
-                        ) : (
-                            <>
-                                <p className="text-lg sm:text-xl font-bold mb-1">
-                                    {featured ? featured.title : upcomingSessions[0].title}
+                        </div>
+
+                        {/* Right: Content */}
+                        <div className="p-8 sm:p-12 flex flex-col justify-center">
+                            <div className="mb-6">
+                                <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 mb-3 leading-tight">
+                                    {featuredCourse.title}
+                                </h2>
+                                <p className="text-gray-600 text-lg leading-relaxed">
+                                    {featuredCourse.description}
                                 </p>
-                                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm">
-                                    <div className="flex items-center gap-1">
-                                        <Clock className="w-4 h-4" />
-                                        <span>Starts in {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s</span>
+                            </div>
+
+                            {/* Stats */}
+                            <div className="flex flex-wrap gap-6 mb-8">
+                                <div className="flex items-center gap-2 text-gray-600">
+                                    <Users className="w-4 h-4 text-gray-400" />
+                                    <span className="font-medium">{featuredCourse.attendee_count} students</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-gray-600">
+                                    <Award className="w-4 h-4 text-gray-400" />
+                                    <span className="font-medium">Certificate included</span>
+                                </div>
+                            </div>
+
+                            {/* Countdown Timer */}
+                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-8">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2 text-gray-600">
+                                        <Clock className="w-4 h-4 text-gray-400" />
+                                        <span className="font-medium">Limited offer ends in</span>
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                        <Users className="w-4 h-4" />
-                                        <span>
-                                            {featured ? `${featured.attendee_count || 0} students` : `${upcomingSessions[0].seatsLeft} seats left`}
+                                    <div className="flex items-center gap-2 font-mono font-semibold text-lg text-gray-900">
+                                        <span>{String(timeLeft.hours).padStart(2, '0')}</span>
+                                        <span className="text-gray-400">:</span>
+                                        <span>{String(timeLeft.minutes).padStart(2, '0')}</span>
+                                        <span className="text-gray-400">:</span>
+                                        <span>{String(timeLeft.seconds).padStart(2, '0')}</span>
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-3 flex items-center gap-2 text-sm">
+                                    <Zap className="w-4 h-4 text-gray-400" />
+                                    <span className="text-gray-600">Only <span className="font-semibold text-gray-900">{featuredCourse.seatsLeft} spots</span> remaining</span>
+                                </div>
+                            </div>
+
+                            {/* Price and CTA */}
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                                <div>
+                                    <div className="flex items-baseline gap-3 mb-1">
+                                        <span className="text-4xl font-semibold text-gray-900">
+                                            KES {featuredCourse.price.toLocaleString()}
+                                        </span>
+                                        <span className="text-xl text-gray-400 line-through">
+                                            KES {featuredCourse.originalPrice.toLocaleString()}
                                         </span>
                                     </div>
-                                </div>
-                            </>
-                        )}
-                    </div>
-
-                    {/* Right: CTA Button */}
-                    {loading ? (
-                        <div className="h-10 w-40 bg-white/70 rounded-full animate-pulse" />
-                    ) : (
-                        <a 
-                            href={featured ? `/dashboard/courses/${featured.id}` : "/dashboard/courses"}
-                            className="bg-white text-blue-600 px-6 py-3 rounded-full hover:bg-gray-100 transition-all duration-200 font-bold text-sm sm:text-base shadow-lg hover:shadow-xl flex items-center gap-2 whitespace-nowrap"
-                        >
-                            View Course
-                            <ArrowRight className="w-4 h-4" />
-                        </a>
-                    )}
-                </div>
-
-                <div className="mt-6">
-                    {loading ? (
-                        <div className="grid sm:grid-cols-2 gap-4">
-                            {Array.from({ length: 2 }).map((_, i) => (
-                                <div key={i} className="bg-white rounded-lg p-3 flex items-center gap-3">
-                                    <div className="w-16 h-16 bg-gray-200 rounded-md animate-pulse" />
-                                    <div className="flex-1">
-                                        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2 animate-pulse" />
-                                        <div className="h-3 bg-gray-200 rounded w-1/2 mb-2 animate-pulse" />
-                                        <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse" />
+                                    <div className="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm font-medium">
+                                        Save 95%
                                     </div>
                                 </div>
-                            ))}
+                                
+                                <a 
+                                    href={`/dashboard/courses/${featuredCourse.id}`}
+                                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg flex items-center gap-2 group"
+                                >
+                                    Enroll Now
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </a>
+                            </div>
                         </div>
-                    ) : recommended.length > 0 ? (
+                    </div>
+                </div>
+
+                {/* More Courses */}
+                {!loading && recommended.length > 0 && (
+                    <div className="mt-20">
+                        <h3 className="text-gray-900 text-xl font-semibold mb-6">
+                            More Popular Courses
+                        </h3>
                         <div className="grid sm:grid-cols-2 gap-4">
                             {recommended.map((course, index) => (
-                                <Link
+                                <a
                                     key={course.id}
                                     href={`/dashboard/courses/${course.id}`}
-                                    className="bg-white rounded-lg p-3 flex items-center gap-3 hover:bg-white/90 transition-colors"
+                                    className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors group"
                                 >
-                                    <div className="relative w-16 h-16 flex-shrink-0 rounded-md overflow-hidden">
-                                        <Image
-                                            src={course.thumbnail_url || getDefaultThumbnail(index)}
-                                            alt={course.title}
-                                            fill
-                                            sizes="64px"
-                                            className="object-cover"
-                                        />
-                                        <span className="absolute top-1 left-1 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">
-                                            {course.level}
-                                        </span>
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="font-semibold text-gray-900 text-sm truncate">{course.title}</p>
-                                        <p className="text-xs text-gray-600 truncate">
-                                            by {course.tutor.first_name} {course.tutor.last_name}
-                                        </p>
-                                        <div className="flex items-center justify-between mt-2 text-[11px]">
-                                            <span className="text-gray-500">
-                                                {course.attendee_count || 0} students • {course.category}
-                                            </span>
-                                            <span className="font-semibold text-gray-900">
-                                                {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
-                                            </span>
+                                    <div className="flex items-start gap-4">
+                                        <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                                            <img
+                                                src={course.thumbnail_url || getDefaultThumbnail(index)}
+                                                alt={course.title}
+                                                className="absolute inset-0 w-full h-full object-cover"
+                                            />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-semibold text-gray-900 text-base mb-1 group-hover:text-blue-600 transition-colors">
+                                                {course.title}
+                                            </p>
+                                            <p className="text-sm text-gray-600 mb-3">
+                                                by {course.tutor.first_name} {course.tutor.last_name}
+                                            </p>
+                                            <div className="flex items-center justify-between text-sm">
+                                                <span className="text-gray-500">
+                                                    {course.attendee_count || 0} students
+                                                </span>
+                                                <span className="font-semibold text-gray-900">
+                                                    {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </Link>
+                                </a>
                             ))}
                         </div>
-                    ) : null}
-                </div>
+                    </div>
+                )}
             </div>
         </section>
     );
