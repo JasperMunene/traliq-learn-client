@@ -51,16 +51,16 @@ export default function HeroSection() {
                         <div className="space-y-4">
                             <h3 className="text-gray-700 font-medium">Popular AI Topics</h3>
                             <div className="flex flex-wrap gap-2 sm:gap-3">
-                                <span className="bg-gray-200 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                                <span className="bg-[#EBF2FE] text-[#1447E6] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     Machine Learning
                                 </span>
-                                <span className="bg-gray-300 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                                <span className="bg-[#F0FDF4] text-[#10B981] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     Deep Learning
                                 </span>
-                                <span className="bg-gray-200 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                                <span className="bg-[#FEF3C7] text-[#F59E0B] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     Computer Vision
                                 </span>
-                                <span className="bg-gray-100 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                                <span className="bg-[#F3E8FF] text-[#9333EA] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     Natural Language Processing
                                 </span>
                             </div>
