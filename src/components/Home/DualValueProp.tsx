@@ -22,7 +22,7 @@ export default function DualValueProp() {
     ];
 
     return (
-        <section className="bg-gray-50 px-6 py-20 lg:py-28">
+        <section className="bg-gray-50 px-4 sm:px-6 py-20 lg:py-28">
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-20">
@@ -40,8 +40,8 @@ export default function DualValueProp() {
                         <div key={index} className="bg-white border border-gray-200 rounded-lg p-6">
                             <div className="flex items-start gap-4">
                                 <div className="flex-shrink-0">
-                                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                                        <Check className="w-5 h-5 text-white" />
+                                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <Check className="w-5 h-5 text-gray-600" />
                                     </div>
                                 </div>
                                 <div>
@@ -61,7 +61,7 @@ export default function DualValueProp() {
                 <div className="text-center mb-12">
                     <Link 
                         href="/dashboard/courses"
-                        className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                        className="inline-block bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium"
                     >
                         Start Learning
                     </Link>
@@ -70,7 +70,7 @@ export default function DualValueProp() {
                 {/* Tutor Note */}
                 <div className="text-center pt-8 border-t border-gray-200">
                     <p className="text-sm text-gray-600">
-                        Are you an AI expert? <Link href="/auth/signup?role=tutor" className="text-blue-600 hover:text-blue-700 font-medium">Become a tutor</Link> and earn 70% revenue share
+                        Are you an AI expert? <Link href="/auth/signup?role=tutor" className="text-[#1447E6] hover:text-[#1039C4] font-medium">Become a tutor</Link> and earn 70% revenue share
                     </p>
                 </div>
             </div>

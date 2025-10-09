@@ -190,7 +190,7 @@ export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => vo
                                 
                                 <a 
                                     href={`/dashboard/courses/${featuredCourse.id}`}
-                                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-lg flex items-center gap-2 group"
+                                    className="bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium text-lg flex items-center gap-2 group"
                                 >
                                     Enroll Now
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

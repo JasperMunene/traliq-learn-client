@@ -34,7 +34,7 @@ export default function PricingSection() {
     ];
 
     return (
-        <section id="pricing" className="bg-white px-6 py-20 lg:py-28">
+        <section id="pricing" className="bg-white px-4 sm:px-6 py-20 lg:py-28">
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-20">
@@ -79,7 +79,7 @@ export default function PricingSection() {
                             {/* CTA Button */}
                             <Link
                                 href={option.href}
-                                className="w-full block text-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+                                className="w-full block text-center bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium"
                             >
                                 {option.cta}
                             </Link>

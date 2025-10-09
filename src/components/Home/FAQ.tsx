@@ -50,14 +50,14 @@ export default function FAQSection() {
     ];
 
     return (
-        <section className="bg-gray-50 px-6 py-16 lg:py-20">
-            <div className="max-w-7xl mx-auto">
+        <section className="bg-gray-50 px-4 sm:px-6 py-20 lg:py-28">
+            <div className="max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
+                <div className="text-center mb-20">
+                    <h2 className="text-4xl lg:text-5xl font-semibold tracking-tight text-gray-900 mb-4">
                         Frequently Asked Questions
                     </h2>
-                    <p className="text-gray-600 text-lg leading-relaxed">
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                         Everything you need to know about learning AI with Traliq AI
                     </p>
                 </div>
@@ -65,10 +65,10 @@ export default function FAQSection() {
                 {/* FAQ Items */}
                 <div className="space-y-4">
                     {faqs.map((faq, index) => (
-                        <div key={index} className="bg-white rounded-2xl shadow-sm">
+                        <div key={index} className="bg-white border border-gray-200 rounded-lg">
                             <button
                                 onClick={() => toggleItem(index)}
-                                className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors duration-200 rounded-2xl"
+                                className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors rounded-lg"
                             >
                                 <span className="text-lg font-semibold text-gray-900 pr-8">
                                     {faq.question}
@@ -98,7 +98,7 @@ export default function FAQSection() {
                     <p className="text-gray-600 mb-4">
                         Still have questions? Our team is here to help.
                     </p>
-                    <button className="bg-gray-900 text-white px-8 py-3 rounded-full hover:bg-gray-800 transition-colors duration-200 font-medium">
+                    <button className="bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium">
                         Contact Support
                     </button>
                 </div>

@@ -36,10 +36,10 @@ export default function HeroSection() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-wrap gap-4 pt-4">
-                            <a href="#courses" className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors font-medium">
+                            <a href="#courses" className="bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium">
                                 Browse Courses
                             </a>
-                            <a href="#pricing" className="bg-gray-100 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">
+                            <a href="#pricing" className="bg-[#EBF2FE] text-[#1447E6] px-6 py-3 rounded-lg hover:bg-[#D6E4FD] transition-colors font-medium">
                                 View Pricing
                             </a>
                         </div>
@@ -136,23 +136,23 @@ export default function HeroSection() {
                                 <div className="flex items-start justify-between mb-3 sm:mb-4">
                                     <div>
                                         <p className="text-gray-600 text-xs sm:text-sm">Learning streak</p>
-                                        <p className="text-xl sm:text-2xl font-bold text-gray-900">28 days</p>
+                                        <p className="text-xl sm:text-2xl font-bold text-[#1447E6]">28 days</p>
                                         <p className="text-gray-500 text-xs">AI concepts mastered</p>
                                     </div>
-                                    <div className="bg-gray-100 px-2 sm:px-3 py-1 rounded-full">
-                                        <span className="text-xs text-gray-600 font-medium">Active</span>
+                                    <div className="bg-[#EBF2FE] px-2 sm:px-3 py-1 rounded-full">
+                                        <span className="text-xs text-[#1447E6] font-medium">Active</span>
                                     </div>
                                 </div>
 
                                 {/* Progress Bars */}
                                 <div className="flex items-end justify-between h-12 sm:h-16 gap-1">
-                                    <div className="bg-gray-200 h-1/4 w-full rounded-t"></div>
-                                    <div className="bg-gray-300 h-2/5 w-full rounded-t"></div>
-                                    <div className="bg-gray-400 h-3/4 w-full rounded-t"></div>
-                                    <div className="bg-gray-300 h-3/5 w-full rounded-t"></div>
-                                    <div className="bg-gray-500 h-full w-full rounded-t"></div>
-                                    <div className="bg-gray-300 h-2/5 w-full rounded-t"></div>
-                                    <div className="bg-gray-200 h-1/4 w-full rounded-t"></div>
+                                    <div className="bg-[#D6E4FD] h-1/4 w-full rounded-t"></div>
+                                    <div className="bg-[#D6E4FD] h-2/5 w-full rounded-t"></div>
+                                    <div className="bg-[#1447E6] h-3/4 w-full rounded-t"></div>
+                                    <div className="bg-[#D6E4FD] h-3/5 w-full rounded-t"></div>
+                                    <div className="bg-[#1447E6] h-full w-full rounded-t"></div>
+                                    <div className="bg-[#D6E4FD] h-2/5 w-full rounded-t"></div>
+                                    <div className="bg-[#D6E4FD] h-1/4 w-full rounded-t"></div>
                                 </div>
 
                                 <div className="flex justify-between text-xs text-gray-400 mt-2">

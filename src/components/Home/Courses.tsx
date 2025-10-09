@@ -25,21 +25,44 @@ interface Course {
 export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         let mounted = true;
-        fetch(API_ENDPOINTS.courses.list)
-            .then(res => res.json())
-            .then(data => {
+        
+        const fetchCourses = async () => {
+            try {
+                console.log('Fetching courses from:', API_ENDPOINTS.courses.list);
+                const res = await fetch(API_ENDPOINTS.courses.list);
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
+                const data = await res.json();
+                console.log('Courses data received:', data);
+                
                 if (!mounted) return;
-                setCourses((data.courses || []).slice(0, 6));
-            })
-            .catch(() => {})
-            .finally(() => {
+                
+                if (data.courses && Array.isArray(data.courses)) {
+                    setCourses(data.courses.slice(0, 6));
+                } else {
+                    throw new Error('Invalid data format');
+                }
+            } catch (err) {
+                console.error('Error fetching courses:', err);
+                if (!mounted) return;
+                setError(err instanceof Error ? err.message : 'Failed to load courses');
+                // Set mock data as fallback
+                setCourses([]);
+            } finally {
                 if (!mounted) return;
                 setLoading(false);
                 onLoaded?.();
-            });
+            }
+        };
+        
+        fetchCourses();
         return () => { mounted = false };
     }, [onLoaded]);
 
@@ -70,6 +93,20 @@ export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) 
 
                 {/* Courses Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    {error && !loading && (
+                        <div className="col-span-full text-center py-12">
+                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 max-w-md mx-auto">
+                                <p className="text-gray-900 font-semibold mb-2">Unable to load courses</p>
+                                <p className="text-gray-600 text-sm mb-4">{error}</p>
+                                <button 
+                                    onClick={() => window.location.reload()}
+                                    className="bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium"
+                                >
+                                    Retry
+                                </button>
+                            </div>
+                        </div>
+                    )}
                     {loading ? (
                         Array.from({ length: 6 }).map((_, i) => (
                             <div key={i} className="bg-white border border-gray-200 rounded-lg overflow-hidden">
@@ -103,7 +140,7 @@ export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) 
                                 </div>
                                 {course.is_free && (
                                     <div className="absolute top-3 right-3">
-                                        <span className="bg-green-500 text-white px-2.5 py-1 rounded text-xs font-bold">FREE</span>
+                                        <span className="bg-[#10B981] text-white px-2.5 py-1 rounded text-xs font-bold">FREE</span>
                                     </div>
                                 )}
                             </div>
@@ -132,7 +169,7 @@ export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) 
                                     <span className="text-xl font-semibold text-gray-900">
                                         {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
                                     </span>
-                                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                                    <button className="bg-[#1447E6] text-white px-4 py-2 rounded-lg hover:bg-[#1039C4] transition-colors text-sm font-medium">
                                         View Course
                                     </button>
                                 </div>
