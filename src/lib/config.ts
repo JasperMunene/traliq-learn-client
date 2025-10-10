@@ -20,6 +20,7 @@ export const API_ENDPOINTS = {
     resetPassword: `${API_BASE_URL}/auth/reset-password`,
     verifyResetToken: `${API_BASE_URL}/auth/verify-reset-token`,
     googleOAuth: `${API_BASE_URL}/auth/google`,
+    loginMethod: `${API_BASE_URL}/auth/login-method`,
   },
   
   // Payment endpoints

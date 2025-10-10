@@ -202,6 +202,8 @@ export class AuthService {
         return 'Authentication process failed. Please try again.';
       case 'access_denied':
         return 'Google authentication was cancelled. Please try again.';
+      case 'use_password_login':
+        return 'This email is registered with a password. Please sign in with your password or use “Forgot password”.';
       default:
         return 'An unexpected error occurred during authentication.';
     }
