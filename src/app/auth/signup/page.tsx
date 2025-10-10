@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthLayout } from '../AuthLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,6 +39,16 @@ export default function SignupPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
+    // Get redirect URL from query params on mount
+    useEffect(() => {
+        const redirect = searchParams.get('redirect');
+        if (redirect) {
+            setRedirectUrl(redirect);
+        }
+    }, [searchParams]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -123,8 +133,13 @@ export default function SignupPage() {
 
                 console.log('Signup successful', signupData);
 
-                // Redirect to verification page with user ID
-                router.push(`/auth/verify-email?user_id=${signupData.user_id}&email=${encodeURIComponent(formData.email)}`);
+                // Redirect to verification page with user ID and preserve redirect URL
+                const verifyUrl = `/auth/verify-email?user_id=${signupData.user_id}&email=${encodeURIComponent(formData.email)}`;
+                if (redirectUrl) {
+                    router.push(`${verifyUrl}&redirect=${encodeURIComponent(redirectUrl)}`);
+                } else {
+                    router.push(verifyUrl);
+                }
 
             } else {
                 // Handle error cases from backend
@@ -502,7 +517,7 @@ export default function SignupPage() {
                         <p className="text-sm text-gray-600">
                             Already have an account?{' '}
                             <Link
-                                href="/auth/login"
+                                href={redirectUrl ? `/auth/login?redirect=${encodeURIComponent(redirectUrl)}` : '/auth/login'}
                                 className="font-semibold text-blue-500 hover:text-blue-500/70 transition-colors hover:underline"
                             >
                                 Sign in

@@ -20,7 +20,7 @@ export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => vo
         currency: "KES",
         is_free: false,
         thumbnail_url: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/wp1lcwdav1p1/5LELBX2Na6yiCXujFH04jB/2f1bad59326a3dd236906d1ef46cf885/Learner-Yvonne-J-USA.png?auto=format%2Ccompress&dpr=1&w=612&h=375&q=40&fit=crop",
-        tutor: { first_name: "Dr. Sarah", last_name: "Kimani" },
+        tutor: { first_name: "Aisha", last_name: "Kamau" },
         attendee_count: 124,
         description: "Empower non-programmers to build simple AI-driven apps.",
         highlights: ["Lifetime Access", "Certificate of Completion", "Real-world Projects", "Expert Instruction"],

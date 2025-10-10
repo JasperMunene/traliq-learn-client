@@ -32,14 +32,16 @@ function VerifyEmailContent() {
     const [isResending, setIsResending] = useState(false);
     const [email, setEmail] = useState('');
     const [userId, setUserId] = useState('');
+    const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // Get user_id and email from query parameters
+    // Get user_id, email, and redirect from query parameters
     useEffect(() => {
         const userIdParam = searchParams.get('user_id');
         const emailParam = searchParams.get('email');
+        const redirectParam = searchParams.get('redirect');
 
         if (userIdParam) {
             setUserId(userIdParam);
@@ -49,6 +51,10 @@ function VerifyEmailContent() {
 
         if (emailParam) {
             setEmail(decodeURIComponent(emailParam));
+        }
+
+        if (redirectParam) {
+            setRedirectUrl(redirectParam);
         }
     }, [searchParams]);
 
@@ -154,9 +160,13 @@ function VerifyEmailContent() {
                 const verifyData = data as VerifyResponse;
                 setSuccess(verifyData.message || 'Email verified successfully!');
 
-                // Redirect to login page after a short delay
+                // Redirect to login page with redirect URL preserved after a short delay
                 setTimeout(() => {
-                    router.push('/auth/login?verified=true');
+                    if (redirectUrl) {
+                        router.push(`/auth/login?verified=true&redirect=${encodeURIComponent(redirectUrl)}`);
+                    } else {
+                        router.push('/auth/login?verified=true');
+                    }
                 }, 2000);
 
             } else {
@@ -223,7 +233,11 @@ function VerifyEmailContent() {
     };
 
     const handleBackToSignup = () => {
-        router.push('/auth/signup');
+        if (redirectUrl) {
+            router.push(`/auth/signup?redirect=${encodeURIComponent(redirectUrl)}`);
+        } else {
+            router.push('/auth/signup');
+        }
     };
 
     // If no user_id is provided, show error state

@@ -1,5 +1,6 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { AuthLayout } from '../AuthLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +43,16 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
+    // Get redirect URL from query params on mount
+    useEffect(() => {
+        const redirect = searchParams.get('redirect');
+        if (redirect) {
+            setRedirectUrl(redirect);
+        }
+    }, [searchParams]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -95,8 +106,13 @@ export default function LoginPage() {
                 // Initialize token refresh scheduler
                 initializeTokenRefresh();
 
-                // Redirect to dashboard or home page
-                router.push('/onboarding');
+                // Redirect to intended page or onboarding (with redirect preserved)
+                if (redirectUrl) {
+                    // Pass redirect URL to onboarding in case user needs to select role
+                    router.push(`/onboarding?redirect=${encodeURIComponent(redirectUrl)}`);
+                } else {
+                    router.push('/onboarding');
+                }
 
             } else {
                 // Handle different error cases from backend
@@ -321,7 +337,7 @@ export default function LoginPage() {
                     <p className="text-gray-600">
                         New to Traliq AI?{' '}
                         <a
-                            href="/auth/signup"
+                            href={redirectUrl ? `/auth/signup?redirect=${encodeURIComponent(redirectUrl)}` : '/auth/signup'}
                             className="font-medium text-gray-900 hover:text-gray-700 transition-colors hover:underline"
                         >
                             Create your account

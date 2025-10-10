@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { ArrowRight, BookOpen, Users } from "lucide-react";
 import Loader from "@/components/Loader";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { fetchWithAuth } from '@/lib/api';
 
 interface User {
@@ -23,6 +23,16 @@ export default function OnboardingPage() {
     const [user, setUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+
+    // Get redirect URL from query params on mount
+    useEffect(() => {
+        const redirect = searchParams.get('redirect');
+        if (redirect) {
+            setRedirectUrl(redirect);
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         const fetchUserRole = async () => {
@@ -51,7 +61,12 @@ export default function OnboardingPage() {
                 setUser(userData);
 
                 if (userData.role) {
-                    router.push('/dashboard');
+                    // If user already has a role and there's a redirect URL, go there
+                    if (redirectUrl) {
+                        router.push(redirectUrl);
+                    } else {
+                        router.push('/dashboard');
+                    }
                     return;
                 }
                 setLoading(false);
@@ -97,11 +112,19 @@ export default function OnboardingPage() {
 
         if (success) {
             if (selected === 'tutor') {
-                // Redirect to tutor onboarding with user ID
-                router.push(`/onboarding/tutor?userId=${user.id}`);
+                // Redirect to tutor onboarding with user ID (and preserve redirect if exists)
+                if (redirectUrl) {
+                    router.push(`/onboarding/tutor?userId=${user.id}&redirect=${encodeURIComponent(redirectUrl)}`);
+                } else {
+                    router.push(`/onboarding/tutor?userId=${user.id}`);
+                }
             } else {
-                // Redirect to learner dashboard
-                router.push('/dashboard');
+                // Redirect to intended page or learner dashboard
+                if (redirectUrl) {
+                    router.push(redirectUrl);
+                } else {
+                    router.push('/dashboard');
+                }
             }
         }
     };

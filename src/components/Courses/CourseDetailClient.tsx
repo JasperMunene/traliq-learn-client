@@ -35,10 +35,24 @@ interface Course {
   average_rating?: number;
 }
 
+interface CourseModule {
+  id: string;
+  course_id: string;
+  title: string;
+  description?: string | null;
+  position: number;
+  duration_minutes?: number | null;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export default function CourseDetailClient({ courseId }: CourseDetailProps) {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [modules, setModules] = useState<CourseModule[]>([]);
+  const [modulesLoading, setModulesLoading] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -68,6 +82,8 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
         if (data && data.id) {
           console.log('Setting course data:', data);
           setCourse(data);
+          // Fetch modules after course loads
+          fetchModules();
         } else {
           console.log('No valid course data, using mock course');
           setCourse(mockCourse);
@@ -86,6 +102,31 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
     fetchCourse();
     return () => { mounted = false };
   }, [courseId]);
+
+  const fetchModules = async () => {
+    try {
+      setModulesLoading(true);
+      console.log('Fetching modules for course:', courseId);
+      const res = await fetch(API_ENDPOINTS.courses.modules(courseId));
+      
+      if (res.ok) {
+        const data = await res.json();
+        console.log('Modules data received:', data);
+        
+        // Handle both possible response formats
+        const modulesList = data.modules || data || [];
+        setModules(Array.isArray(modulesList) ? modulesList : []);
+      } else {
+        console.log('Failed to fetch modules, status:', res.status);
+        setModules([]);
+      }
+    } catch (err) {
+      console.error('Error fetching modules:', err);
+      setModules([]);
+    } finally {
+      setModulesLoading(false);
+    }
+  };
 
   const mockCourse: Course = {
     id: courseId,
@@ -217,7 +258,7 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
                 {/* CTA Buttons */}
                 <div className="flex flex-wrap gap-4">
                   <Link
-                    href={`/auth/signup?redirect=/courses/${course.id}/enroll`}
+                    href={`/auth/signup?redirect=/dashboard/courses/${course.id}`}
                     className="bg-[#1447E6] text-white px-8 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium"
                   >
                     {course.is_free ? 'Enroll for Free' : `Enroll Now - ${course.currency} ${course.price.toLocaleString()}`}
@@ -274,24 +315,70 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
 
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Course curriculum</h2>
                 <div className="space-y-4">
-                  {[
-                    { title: "Introduction to Machine Learning", lessons: 5, duration: "45 min" },
-                    { title: "Data Preprocessing", lessons: 8, duration: "1h 20min" },
-                    { title: "Supervised Learning", lessons: 12, duration: "2h 15min" },
-                    { title: "Unsupervised Learning", lessons: 7, duration: "1h 30min" },
-                    { title: "Model Evaluation", lessons: 6, duration: "1h 10min" },
-                    { title: "Final Project", lessons: 3, duration: "2h" }
-                  ].map((module, index) => (
-                    <div key={index} className="bg-white border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-medium text-gray-900">{module.title}</h3>
-                        <div className="flex items-center gap-4 text-sm text-gray-600">
-                          <span>{module.lessons} lessons</span>
-                          <span>{module.duration}</span>
+                  {modulesLoading ? (
+                    // Loading skeleton for modules
+                    Array.from({ length: 3 }).map((_, index) => (
+                      <div key={index} className="bg-white border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="h-5 bg-gray-200 rounded w-3/4 mb-2 animate-pulse" />
+                            <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse" />
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="h-4 bg-gray-200 rounded w-16 animate-pulse" />
+                            <div className="h-4 bg-gray-200 rounded w-20 animate-pulse" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : modules.length > 0 ? (
+                    modules
+                      .sort((a, b) => a.position - b.position)
+                      .map((module, index) => (
+                        <div key={module.id} className="bg-white border border-gray-200 rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <h3 className="font-medium text-gray-900 mb-1">
+                                {index + 1}. {module.title}
+                              </h3>
+                              {module.description && (
+                                <p className="text-sm text-gray-600">{module.description}</p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-4 text-sm text-gray-600">
+                              {module.duration_minutes && (
+                                <span>{module.duration_minutes} min</span>
+                              )}
+                              {module.is_published ? (
+                                <span className="text-green-600 font-medium">Published</span>
+                              ) : (
+                                <span className="text-gray-400 font-medium">Draft</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                  ) : (
+                    // Fallback to mock data if no modules are available
+                    [
+                      { title: "Introduction to Machine Learning", lessons: 5, duration: "45 min" },
+                      { title: "Data Preprocessing", lessons: 8, duration: "1h 20min" },
+                      { title: "Supervised Learning", lessons: 12, duration: "2h 15min" },
+                      { title: "Unsupervised Learning", lessons: 7, duration: "1h 30min" },
+                      { title: "Model Evaluation", lessons: 6, duration: "1h 10min" },
+                      { title: "Final Project", lessons: 3, duration: "2h" }
+                    ].map((module, index) => (
+                      <div key={index} className="bg-white border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-medium text-gray-900">{module.title}</h3>
+                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                            <span>{module.lessons} lessons</span>
+                            <span>{module.duration}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -308,7 +395,7 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
                   </div>
 
                   <Link
-                    href={`/auth/signup?redirect=/courses/${course.id}/enroll`}
+                    href={`/auth/signup?redirect=/dashboard/courses/${course.id}`}
                     className="w-full block text-center bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium mb-4"
                   >
                     {course.is_free ? 'Enroll for Free' : 'Enroll Now'}
