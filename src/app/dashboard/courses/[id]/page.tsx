@@ -131,6 +131,18 @@ export default function SingleCoursePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courseId]);
 
+    // Re-check enrollment when page becomes visible (e.g., after payment redirect)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible' && courseId) {
+                checkEnrollmentStatus();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    }, [courseId]); // eslint-disable-line react-hooks/exhaustive-deps
+
     // Check if course is currently live (on the same day as scheduled start)
     useEffect(() => {
         if (!course || !course.scheduled_start || !course.scheduled_end) return;
@@ -209,15 +221,23 @@ export default function SingleCoursePage() {
 
     const fetchAssets = async (onlyIfAuthorized = true) => {
         try {
+            console.log('Fetching assets for course:', courseId);
             // Only fetch assets when user has access (tutor or enrolled)
             if (onlyIfAuthorized) {
                 const resp = await fetchWithAuth(API_ENDPOINTS.courses.assets(courseId));
+                console.log('Assets fetch response status:', resp.status);
                 if (resp.ok) {
                     const data = await resp.json();
+                    console.log('Assets fetched successfully:', data.assets?.length || 0, 'assets');
                     setAssets(Array.isArray(data.assets) ? data.assets : []);
                 } else if (resp.status === 403) {
                     // No access, keep assets empty and UI will show locked state
+                    console.log('Access denied (403) - user not authorized to view assets');
                     setAssets([]);
+                } else {
+                    console.log('Failed to fetch assets, status:', resp.status);
+                    const errorData = await resp.json().catch(() => ({}));
+                    console.log('Error data:', errorData);
                 }
             }
         } catch (e) {
@@ -234,6 +254,12 @@ export default function SingleCoursePage() {
                 const enrollments = data.enrollments || [];
                 const enrolled = enrollments.some((enrollment: Enrollment) => enrollment.course_id === courseId);
                 setIsEnrolled(enrolled);
+                
+                // If enrolled, fetch assets to unlock modules
+                if (enrolled && !isEnrolled) {
+                    console.log('User is now enrolled, fetching assets...');
+                    fetchAssets(true);
+                }
             }
         } catch (err) {
             console.error('Error checking enrollment:', err);
@@ -265,8 +291,12 @@ export default function SingleCoursePage() {
 
                 if (response.ok) {
                     setEnrollmentSuccess(true);
+                    setIsEnrolled(true);
+                    // Fetch assets immediately after enrollment
+                    fetchAssets(true);
                     setTimeout(() => {
-                        window.location.href = `/dashboard/courses/${course.id}`;
+                        // Refresh the page to show updated enrollment status
+                        window.location.reload();
                     }, 2000);
                 } else {
                     const errorData = await response.json();
@@ -342,9 +372,22 @@ export default function SingleCoursePage() {
     const getAssetsForModule = (moduleId: string) => assets.filter(a => a.module_id === moduleId);
     const getCourseLevelAssets = () => assets.filter(a => !a.module_id);
     const canAccessAssets = !!(currentUser && (isEnrolled || (course && currentUser.id === course.tutor.id)));
+    
+    // Debug logging
+    console.log('Course Page State:', {
+        isEnrolled,
+        canAccessAssets,
+        assetsCount: assets.length,
+        modulesCount: modules.length,
+        currentUserId: currentUser?.id,
+        tutorId: course?.tutor?.id
+    });
 
     useEffect(() => {
-        if (course && canAccessAssets) {
+        // Fetch assets when user gains access (enrolled or is tutor)
+        const hasAccess = !!(currentUser && (isEnrolled || (course && currentUser.id === course.tutor.id)));
+        if (course && hasAccess) {
+            console.log('User has access to assets, fetching...');
             fetchAssets(true);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
