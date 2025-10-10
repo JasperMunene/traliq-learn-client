@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator';
 import { Mail, User, Lock, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { API_ENDPOINTS } from '@/lib/config';
+import { authService } from '@/lib/auth';
 
 // Interface for the API response
 interface SignupResponse {
@@ -139,15 +140,14 @@ export default function SignupPage() {
         }
     };
 
-    const handleGoogleLogin = async () => {
+    const handleGoogleSignup = () => {
         setIsGoogleLoading(true);
         try {
-            // Redirect to your backend Google OAuth endpoint
-            window.location.href = API_ENDPOINTS.auth.googleOAuth;
+            // Use professional auth service for OAuth
+            authService.initiateGoogleOAuth();
         } catch (error) {
-            console.error('Google login failed:', error);
-            setErrors({ general: 'Google login failed. Please try again.' });
-        } finally {
+            console.error('Google OAuth initiation failed:', error);
+            setErrors({ general: 'Failed to initialize Google authentication. Please try again.' });
             setIsGoogleLoading(false);
         }
     };
@@ -477,7 +477,7 @@ export default function SignupPage() {
                     <Button
                         type="button"
                         variant="outline"
-                        onClick={handleGoogleLogin}
+                        onClick={handleGoogleSignup}
                         disabled={isGoogleLoading || isLoading}
                         size="lg"
                         className="w-full h-12 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] disabled:scale-100"

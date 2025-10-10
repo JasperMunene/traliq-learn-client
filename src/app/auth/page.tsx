@@ -1,32 +1,25 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { CheckCircle, XCircle, Loader2, Shield } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2, Shield, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { authService, type User } from '@/lib/auth';
 
-interface UserData {
-    token: string;
-    refreshToken: string | null;
-    email: string;
-    id: string;
-    firstName: string;
-    lastName: string;
-    avatarUrl: string;
-    role: string | null;
-    emailVerified: boolean;
+interface AuthState {
+    loading: boolean;
+    success: boolean;
+    error: string | null;
+    user: User | null;
+    progress: number;
 }
 
 const AuthCallback = () => {
-    const [authState, setAuthState] = useState<{
-        loading: boolean;
-        success: boolean;
-        error: string | null;
-        userData: UserData | null;
-        progress: number;
-    }>({
+    const router = useRouter();
+    const [authState, setAuthState] = useState<AuthState>({
         loading: true,
         success: false,
         error: null,
-        userData: null,
+        user: null,
         progress: 0
     });
 
@@ -41,102 +34,43 @@ const AuthCallback = () => {
                 updateProgress(20);
                 await new Promise(resolve => setTimeout(resolve, 300));
 
-                const urlParams = new URLSearchParams(window.location.search);
-                const error = urlParams.get('error');
-
                 updateProgress(40);
-
-                // Handle OAuth errors
-                if (error) {
-                    let errorMessage = 'Authentication failed';
-                    switch (error) {
-                        case 'oauth_failed':
-                            errorMessage = 'Failed to connect with Google. Please try again.';
-                            break;
-                        case 'authentication_failed':
-                            errorMessage = 'Authentication process failed. Please try again.';
-                            break;
-                        default:
-                            errorMessage = 'An unexpected error occurred during authentication.';
-                    }
-
-                    setAuthState({
-                        loading: false,
-                        success: false,
-                        error: errorMessage,
-                        userData: null,
-                        progress: 0
-                    });
-                    return;
-                }
+                await new Promise(resolve => setTimeout(resolve, 300));
 
                 updateProgress(60);
-                await new Promise(resolve => setTimeout(resolve, 300));
-
-                // Extract authentication data
-                const token = urlParams.get('token');
-                const refreshToken = urlParams.get('refresh_token');
-                const email = urlParams.get('email');
-                const id = urlParams.get('id');
-                const firstName = urlParams.get('first_name');
-                const lastName = urlParams.get('last_name');
-                const avatarUrl = urlParams.get('avatar_url');
-                const role = urlParams.get('role');
-                const emailVerified = urlParams.get('email_verified') === 'true';
-
+                const urlParams = new URLSearchParams(window.location.search);
+                
                 updateProgress(80);
-
-                // Validate required authentication data
-                if (!token || !email || !id) {
-                    setAuthState({
-                        loading: false,
-                        success: false,
-                        error: 'Invalid authentication data received. Please try logging in again.',
-                        userData: null,
-                        progress: 0
-                    });
-                    return;
-                }
-
-                // Prepare user data
-                const userData = {
-                    token,
-                    refreshToken,
-                    email: decodeURIComponent(email),
-                    id,
-                    firstName: decodeURIComponent(firstName || ''),
-                    lastName: decodeURIComponent(lastName || ''),
-                    avatarUrl: decodeURIComponent(avatarUrl || ''),
-                    role,
-                    emailVerified
-                };
-
-                updateProgress(90);
                 await new Promise(resolve => setTimeout(resolve, 300));
 
-                // Store authentication data in localStorage
-                localStorage.setItem('auth_token', token);
-                if (refreshToken) {
-                    localStorage.setItem('refresh_token', refreshToken);
-                }
-                localStorage.setItem('user_data', JSON.stringify(userData));
+                // Use professional auth service to process OAuth callback
+                const result = await authService.processOAuthCallback(urlParams);
 
                 updateProgress(100);
                 await new Promise(resolve => setTimeout(resolve, 500));
 
-                // Set successful authentication state
-                setAuthState({
-                    loading: false,
-                    success: true,
-                    error: null,
-                    userData,
-                    progress: 100
-                });
+                if (result.success && result.user) {
+                    setAuthState({
+                        loading: false,
+                        success: true,
+                        error: null,
+                        user: result.user,
+                        progress: 100
+                    });
 
-                // Redirect to dashboard after showing success
-                setTimeout(() => {
-                    window.location.href = '/dashboard';
-                }, 2000);
+                    // Redirect to onboarding after showing success
+                    setTimeout(() => {
+                        router.push('/onboarding');
+                    }, 2000);
+                } else {
+                    setAuthState({
+                        loading: false,
+                        success: false,
+                        error: result.error || 'Authentication failed',
+                        user: null,
+                        progress: 0
+                    });
+                }
 
             } catch (error) {
                 console.error('Auth callback processing error:', error);
@@ -144,14 +78,14 @@ const AuthCallback = () => {
                     loading: false,
                     success: false,
                     error: 'Failed to process authentication. Please try again.',
-                    userData: null,
+                    user: null,
                     progress: 0
                 });
             }
         };
 
         processAuthCallback();
-    }, []);
+    }, [router]);
 
     const handleRetryAuth = () => {
         window.location.href = '/auth/login';
@@ -169,8 +103,9 @@ const AuthCallback = () => {
                     <p className="text-gray-600 mb-6">{authState.error}</p>
                     <button
                         onClick={handleRetryAuth}
-                        className="w-full bg-[#2CA7A3] hover:bg-[#238B87] text-white font-medium py-2.5 px-4 rounded-md transition-colors duration-200"
+                        className="w-full bg-[#1447E6] hover:bg-[#1039C4] text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
                     >
+                        <ArrowRight className="w-4 h-4" />
                         Try Again
                     </button>
                 </div>
@@ -179,8 +114,8 @@ const AuthCallback = () => {
     }
 
     // Success state (briefly shown before redirect)
-    if (!authState.loading && authState.success && authState.userData) {
-        const { userData } = authState;
+    if (!authState.loading && authState.success && authState.user) {
+        const { user } = authState;
 
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -193,9 +128,9 @@ const AuthCallback = () => {
 
                     <div className="bg-gray-50 rounded-lg p-4 mb-6">
                         <div className="flex items-center justify-center space-x-3">
-                            {userData.avatarUrl && (
+                            {user.avatar_url && (
                                 <Image
-                                    src={userData.avatarUrl}
+                                    src={(user.avatar_url || '').trim()}
                                     width={48}
                                     height={48}
                                     alt="Profile"
@@ -204,23 +139,24 @@ const AuthCallback = () => {
                             )}
                             <div>
                                 <p className="font-medium text-gray-900">
-                                    {userData.firstName} {userData.lastName}
+                                    {user.first_name} {user.last_name}
                                 </p>
-                                <p className="text-sm text-gray-600 capitalize">{userData.role}</p>
+                                <p className="text-sm text-gray-600 capitalize">{user.role}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-center space-x-2 text-[#2CA7A3] mb-4">
+                    <div className="flex items-center justify-center space-x-2 text-[#1447E6] mb-4">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm font-medium">Redirecting to dashboard...</span>
+                        <span className="text-sm font-medium">Redirecting to onboarding...</span>
                     </div>
 
                     <button
-                        onClick={() => window.location.href = '/dashboard'}
-                        className="w-full bg-[#2CA7A3] hover:bg-[#238B87] text-white font-medium py-2.5 px-4 rounded-md transition-colors duration-200"
+                        onClick={() => router.push('/onboarding')}
+                        className="w-full bg-[#1447E6] hover:bg-[#1039C4] text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
                     >
-                        Continue to Dashboard
+                        <ArrowRight className="w-4 h-4" />
+                        Continue to Onboarding
                     </button>
                 </div>
             </div>
@@ -246,7 +182,7 @@ const AuthCallback = () => {
                                 stroke="currentColor"
                                 strokeWidth="2"
                                 fill="none"
-                                className="text-[#2CA7A3]"
+                                className="text-[#1447E6]"
                                 strokeDasharray={`${authState.progress * 0.628} 62.8`}
                                 strokeLinecap="round"
                                 style={{
@@ -256,7 +192,7 @@ const AuthCallback = () => {
                         </svg>
                         {/* Center icon */}
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <Shield className="h-8 w-8 text-[#2CA7A3]" />
+                            <Shield className="h-8 w-8 text-[#1447E6]" />
                         </div>
                     </div>
                 </div>
@@ -291,7 +227,7 @@ const AuthCallback = () => {
                         )}
                         {authState.progress >= 90 && (
                             <div className="flex items-center justify-center space-x-2 text-sm">
-                                <Loader2 className="h-4 w-4 text-[#2CA7A3] animate-spin" />
+                                <Loader2 className="h-4 w-4 text-[#1447E6] animate-spin" />
                                 <span className="text-gray-600">Finalizing authentication</span>
                             </div>
                         )}
@@ -301,7 +237,7 @@ const AuthCallback = () => {
                 {/* Progress bar */}
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                     <div
-                        className="bg-[#2CA7A3] h-2 rounded-full transition-all duration-300 ease-out"
+                        className="bg-[#1447E6] h-2 rounded-full transition-all duration-300 ease-out"
                         style={{ width: `${authState.progress}%` }}
                     ></div>
                 </div>

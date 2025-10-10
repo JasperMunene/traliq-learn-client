@@ -33,6 +33,8 @@ interface Course {
 interface Enrollment { id: string; course_id: string; }
 
 export default function DashboardOverview({ user }: DashboardOverviewProps) {
+    // Sanitize remote image URLs that might contain trailing spaces/newlines
+    const cleanUrl = (url?: string | null) => (typeof url === 'string' ? url.trim() : '');
     const [courses, setCourses] = useState<Course[]>([]);
     const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
     const [loading, setLoading] = useState(true);
@@ -173,7 +175,7 @@ export default function DashboardOverview({ user }: DashboardOverviewProps) {
                         return (
                         <Link key={session.id} href={`/dashboard/courses/${session.id}`} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl dark:hover:shadow-2xl transition-all group" style={{ boxShadow: 'var(--shadow-theme-md)' }}>
                             <div className="relative h-48">
-                                <Image src={session.thumbnail_url || getDefaultThumbnail(idx)} alt={session.title} width={400} height={200} className="w-full h-full object-cover" />
+                                <Image src={cleanUrl(session.thumbnail_url) || getDefaultThumbnail(idx)} alt={session.title} width={400} height={200} className="w-full h-full object-cover" />
                                 {isLive && (
                                     <div className="absolute top-3 left-3 bg-error-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 animate-pulse">
                                         <span className="w-2 h-2 bg-white rounded-full"></span>
@@ -218,7 +220,7 @@ export default function DashboardOverview({ user }: DashboardOverviewProps) {
                             <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl dark:hover:shadow-2xl transition-all group" style={{ boxShadow: 'var(--shadow-theme-md)' }}>
                                 <div className="flex">
                                     <div className="relative w-40 h-32 flex-shrink-0">
-                                        <Image src={course.thumbnail_url || getDefaultThumbnail(idx)} alt={course.title} width={160} height={128} className="w-full h-full object-cover" />
+                                        <Image src={cleanUrl(course.thumbnail_url) || getDefaultThumbnail(idx)} alt={course.title} width={160} height={128} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
                                                 <Play className="w-5 h-5 text-gray-900 ml-0.5" />
@@ -259,7 +261,7 @@ export default function DashboardOverview({ user }: DashboardOverviewProps) {
                     {recommendedCourses.map((course, idx) => (
                         <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:shadow-xl dark:hover:shadow-2xl hover:scale-105 transition-all group" style={{ boxShadow: 'var(--shadow-theme-md)' }}>
                             <div className="relative h-40">
-                                <Image src={course.thumbnail_url || getDefaultThumbnail(idx)} alt={course.title} width={400} height={160} className="w-full h-full object-cover" />
+                                <Image src={cleanUrl(course.thumbnail_url) || getDefaultThumbnail(idx)} alt={course.title} width={400} height={160} className="w-full h-full object-cover" />
                                 {course.is_free && (
                                     <div className="absolute top-3 right-3 bg-success-500 text-white px-2.5 py-1 rounded-full text-xs font-bold">FREE</div>
                                 )}

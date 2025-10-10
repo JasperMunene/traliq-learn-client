@@ -3,15 +3,15 @@
  * Centralized configuration for API endpoints
  */
 
-// Use environment variable or fallback to local API
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
+// Use environment variable or fallback to local API (localhost is preferred for OAuth redirect URIs)
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 // API Endpoints
 export const API_ENDPOINTS = {
   // Auth endpoints
   auth: {
     signup: `${API_BASE_URL}/auth/signup`,
-    login: `${API_BASE_URL}/auth/login`,
+    login: `${API_BASE_URL}/auth/signin`,
     logout: `${API_BASE_URL}/auth/logout`,
     refreshToken: `${API_BASE_URL}/auth/refresh-token`,
     verifyEmail: `${API_BASE_URL}/auth/verify-email`,

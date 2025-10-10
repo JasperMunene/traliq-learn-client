@@ -9,6 +9,8 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'l
 import { useRouter } from 'next/navigation';
 import { setTokens } from '@/lib/cookies';
 import { initializeTokenRefresh } from '@/lib/api';
+import { authService } from '@/lib/auth';
+import { API_ENDPOINTS } from '@/lib/config';
 
 // Interface for the API response
 interface LoginResponse {
@@ -67,7 +69,7 @@ export default function LoginPage() {
 
         try {
             // Make API call to your Flask backend
-            const response = await fetch('https://api.traliq.com/auth/signin', {
+            const response = await fetch(API_ENDPOINTS.auth.login, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,15 +119,14 @@ export default function LoginPage() {
         }
     };
 
-    const handleGoogleLogin = async () => {
+    const handleGoogleLogin = () => {
         setIsGoogleLoading(true);
         try {
-            // Redirect to your backend Google OAuth endpoint
-            window.location.href = 'https://api.traliq.com/auth/google';
+            // Use professional auth service for OAuth
+            authService.initiateGoogleOAuth();
         } catch (error) {
-            console.error('Google login failed:', error);
-            setErrors({ general: 'Google login failed. Please try again.' });
-        } finally {
+            console.error('Google OAuth initiation failed:', error);
+            setErrors({ general: 'Failed to initialize Google authentication. Please try again.' });
             setIsGoogleLoading(false);
         }
     };
