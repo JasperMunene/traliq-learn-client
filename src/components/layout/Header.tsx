@@ -10,6 +10,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,9 +29,9 @@ export default function Header() {
                     <a href="#" className="text-gray-700 hover:text-blue-400 transition-all duration-200 font-medium">
                         Home
                     </a>
-                    <a href="#" className="text-gray-700 hover:text-blue-400 transition-all duration-200 font-medium">
-                        Categories
-                    </a>
+                    <Link href="/courses" className="text-gray-700 hover:text-blue-400 transition-all duration-200 font-medium">
+                        Courses
+                    </Link>
                     <a href="#" className="text-gray-700 hover:text-blue-400 transition-all duration-200 font-medium">
                         Mentors
                     </a>
@@ -103,13 +104,13 @@ export default function Header() {
                                     >
                                         Home
                                     </a>
-                                    <a
-                                        href="#"
+                                    <Link
+                                        href="/courses"
                                         className="text-gray-700 hover:text-blue-400 hover:bg-gray-100 transition-all duration-200 font-medium text-lg py-3 px-4 rounded-lg"
                                         onClick={() => setMobileMenuOpen(false)}
                                     >
-                                        Categories
-                                    </a>
+                                        Courses
+                                    </Link>
                                     <a
                                         href="#"
                                         className="text-gray-700 hover:text-blue-400 hover:bg-gray-100 transition-all duration-200 font-medium text-lg py-3 px-4 rounded-lg"
