@@ -18,6 +18,8 @@ import {
   DollarSign,
   MessageSquare,
   MoreHorizontal,
+  GraduationCap,
+  Search,
 } from "lucide-react";
 
 type NavItem = {
@@ -35,8 +37,13 @@ const learnerNavItems: NavItem[] = [
     path: "/dashboard?tab=overview",
   },
   {
-    icon: <BookOpen className="w-5 h-5" />,
-    name: "Courses",
+    icon: <GraduationCap className="w-5 h-5" />,
+    name: "My Courses",
+    path: "/dashboard/my-courses",
+  },
+  {
+    icon: <Search className="w-5 h-5" />,
+    name: "Browse Courses",
     path: "/dashboard/courses",
   },
   {

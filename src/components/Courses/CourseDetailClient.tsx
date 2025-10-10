@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { Users, Clock, Star, Play, Calendar, CheckCircle, Globe, Award } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { API_ENDPOINTS } from "@/lib/config";
+import { getAccessToken } from "@/lib/cookies";
 
 interface CourseDetailProps {
   courseId: string;
@@ -53,6 +55,14 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
   const [error, setError] = useState<string | null>(null);
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [modulesLoading, setModulesLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = getAccessToken();
+    setIsAuthenticated(!!token);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -257,12 +267,21 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
 
                 {/* CTA Buttons */}
                 <div className="flex flex-wrap gap-4">
-                  <Link
-                    href={`/auth/signup?redirect=/dashboard/courses/${course.id}`}
-                    className="bg-[#1447E6] text-white px-8 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium"
-                  >
-                    {course.is_free ? 'Enroll for Free' : `Enroll Now - ${course.currency} ${course.price.toLocaleString()}`}
-                  </Link>
+                  {isAuthenticated ? (
+                    <button
+                      onClick={() => router.push(`/dashboard/courses/${course.id}`)}
+                      className="bg-[#1447E6] text-white px-8 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium"
+                    >
+                      {course.is_free ? 'Enroll for Free' : `Enroll Now - ${course.currency} ${course.price.toLocaleString()}`}
+                    </button>
+                  ) : (
+                    <Link
+                      href={`/auth/signup?redirect=/dashboard/courses/${course.id}`}
+                      className="bg-[#1447E6] text-white px-8 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium"
+                    >
+                      {course.is_free ? 'Enroll for Free' : `Enroll Now - ${course.currency} ${course.price.toLocaleString()}`}
+                    </Link>
+                  )}
                   <button className="bg-[#EBF2FE] text-[#1447E6] px-8 py-3 rounded-lg hover:bg-[#D6E4FD] transition-colors font-medium">
                     Preview Course
                   </button>
@@ -394,12 +413,21 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
                     )}
                   </div>
 
-                  <Link
-                    href={`/auth/signup?redirect=/dashboard/courses/${course.id}`}
-                    className="w-full block text-center bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium mb-4"
-                  >
-                    {course.is_free ? 'Enroll for Free' : 'Enroll Now'}
-                  </Link>
+                  {isAuthenticated ? (
+                    <button
+                      onClick={() => router.push(`/dashboard/courses/${course.id}`)}
+                      className="w-full block text-center bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium mb-4"
+                    >
+                      {course.is_free ? 'Enroll for Free' : 'Enroll Now'}
+                    </button>
+                  ) : (
+                    <Link
+                      href={`/auth/signup?redirect=/dashboard/courses/${course.id}`}
+                      className="w-full block text-center bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium mb-4"
+                    >
+                      {course.is_free ? 'Enroll for Free' : 'Enroll Now'}
+                    </Link>
+                  )}
 
                   <div className="space-y-4 text-sm">
                     <div className="flex items-center gap-3">

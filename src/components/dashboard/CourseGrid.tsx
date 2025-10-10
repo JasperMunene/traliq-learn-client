@@ -112,7 +112,7 @@ export default function CourseGrid() {
                         <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 flex flex-col" style={{ boxShadow: 'var(--shadow-theme-sm)' }}>
                             <div className="relative h-40">
                                 <Image
-                                    src={course.thumbnail_url || getDefaultThumbnail(index)}
+                                    src={(course.thumbnail_url || "").trim() || getDefaultThumbnail(index)}
                                     alt={course.title}
                                     width={500}
                                     height={500}
@@ -171,7 +171,7 @@ export default function CourseGrid() {
                         <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 flex flex-col" style={{ boxShadow: 'var(--shadow-theme-sm)' }}>
                             <div className="relative h-40">
                                 <Image
-                                    src={course.thumbnail_url || getDefaultThumbnail(index)}
+                                    src={(course.thumbnail_url || "").trim() || getDefaultThumbnail(index)}
                                     alt={course.title}
                                     width={500}
                                     height={500}
