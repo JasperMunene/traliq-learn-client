@@ -46,9 +46,10 @@ export default function LoginPage() {
     const [methodLoading, setMethodLoading] = useState(false);
     const [methodChecked, setMethodChecked] = useState(false);
     const [loginMethod, setLoginMethod] = useState<'unknown' | 'password' | 'google' | 'both'>('unknown');
-    const [allowPassword, setAllowPassword] = useState(true);
-    const [allowGoogle, setAllowGoogle] = useState(true);
+    const [allowPassword, setAllowPassword] = useState(false);
+    const [allowGoogle, setAllowGoogle] = useState(false);
     const [methodMessage, setMethodMessage] = useState<string | null>(null);
+    const [emailExists, setEmailExists] = useState<boolean | null>(null);
     const router = useRouter();
     const searchParams = useSearchParams();
     const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
@@ -174,9 +175,10 @@ export default function LoginPage() {
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             setMethodChecked(false);
             setLoginMethod('unknown');
-            setAllowGoogle(true);
-            setAllowPassword(true);
+            setAllowGoogle(false);
+            setAllowPassword(false);
             setMethodMessage(null);
+            setEmailExists(null);
             return;
         }
 
@@ -198,6 +200,11 @@ export default function LoginPage() {
                 setAllowGoogle(Boolean(data?.show_google));
                 setMethodMessage(typeof data?.message === 'string' ? data.message : null);
                 setMethodChecked(true);
+                if (typeof data?.exists === 'boolean') {
+                    setEmailExists(data.exists);
+                } else {
+                    setEmailExists(null);
+                }
 
                 // Clear password if not allowed to avoid accidental submission
                 if (!data?.show_password) {
@@ -205,12 +212,13 @@ export default function LoginPage() {
                 }
             } catch (err) {
                 if (!cancelled) {
-                    // Non-fatal: allow both as fallback
+                    // Non-fatal: keep hidden until retry
                     setLoginMethod('unknown');
-                    setAllowPassword(true);
-                    setAllowGoogle(true);
+                    setAllowPassword(false);
+                    setAllowGoogle(false);
                     setMethodMessage(null);
                     setMethodChecked(false);
+                    setEmailExists(null);
                 }
             } finally {
                 if (!cancelled) setMethodLoading(false);
@@ -283,7 +291,7 @@ export default function LoginPage() {
                     </div>
 
                     {/* Password Field (conditionally shown) */}
-                    {allowPassword && (
+                    {methodChecked && allowPassword && (
                         <div className="space-y-3">
                             <Label htmlFor="password" className="text-gray-900 font-medium">
                                 Password
@@ -333,6 +341,7 @@ export default function LoginPage() {
                     )}
 
                     {/* Remember me and Forgot password */}
+                    {methodChecked && allowPassword && (
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <Checkbox
@@ -354,23 +363,13 @@ export default function LoginPage() {
                             Forgot password?
                         </a>
                     </div>
+                    )}
 
-                    {/* Method hint */}
-                    {methodLoading && (
-                        <div className="flex items-center space-x-2 text-gray-600">
-                            <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" />
-                            <span className="text-sm">Checking your sign-in method…</span>
-                        </div>
-                    )}
-                    {methodMessage && !methodLoading && (
-                        <div className="p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-700 text-sm">
-                            {methodMessage}
-                        </div>
-                    )}
+                    {/* Method hint intentionally omitted to keep UI minimal until method is determined */}
 
                     {/* Submit button */}
                     <div className="space-y-4">
-                        {allowPassword && (
+                        {methodChecked && allowPassword && (
                             <Button
                                 type="submit"
                                 disabled={isLoading}
@@ -391,6 +390,7 @@ export default function LoginPage() {
                         )}
 
                         {/* Divider */}
+                        {(methodChecked && allowPassword && allowGoogle) && (
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
                                 <div className="w-full border-t border-gray-200" />
@@ -399,9 +399,10 @@ export default function LoginPage() {
                                 <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
                             </div>
                         </div>
+                        )}
 
                         {/* Google login button (conditionally shown) */}
-                        {allowGoogle && (
+                        {methodChecked && allowGoogle && (
                             <Button
                                 type="button"
                                 variant="outline"
@@ -428,17 +429,19 @@ export default function LoginPage() {
                 </form>
 
                 {/* Sign up link */}
-                <div className="text-center pt-6 border-t border-gray-100">
-                    <p className="text-gray-600">
-                        New to Traliq AI?{' '}
-                        <a
-                            href={redirectUrl ? `/auth/signup?redirect=${encodeURIComponent(redirectUrl)}` : '/auth/signup'}
-                            className="font-medium text-gray-900 hover:text-gray-700 transition-colors hover:underline"
-                        >
-                            Create your account
-                        </a>
-                    </p>
-                </div>
+                {methodChecked && emailExists === false && (
+                    <div className="text-center pt-6 border-t border-gray-100">
+                        <p className="text-gray-600">
+                            New to Traliq AI?{' '}
+                            <a
+                                href={redirectUrl ? `/auth/signup?redirect=${encodeURIComponent(redirectUrl)}` : '/auth/signup'}
+                                className="font-medium text-gray-900 hover:text-gray-700 transition-colors hover:underline"
+                            >
+                                Create your account
+                            </a>
+                        </p>
+                    </div>
+                )}
             </div>
         </AuthLayout>
     );
