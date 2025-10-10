@@ -2,11 +2,12 @@ import React from 'react';
 import CourseDetailClient from '@/components/Courses/CourseDetailClient';
 
 interface CourseDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function CourseDetailPage({ params }: CourseDetailPageProps) {
-  return <CourseDetailClient courseId={params.id} />;
+export default async function CourseDetailPage({ params }: CourseDetailPageProps) {
+  const { id } = await params;
+  return <CourseDetailClient courseId={id} />;
 }

@@ -131,7 +131,7 @@ export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) 
                             </div>
                         ))
                     ) : courses.map((course, index) => (
-                        <Link key={course.id} href={`/dashboard/courses/${course.id}`} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors">
+                        <Link key={course.id} href={`/courses/${course.id}`} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 transition-colors">
                             {/* Course Image */}
                             <div className="relative h-48">
                                 <Image
@@ -188,7 +188,7 @@ export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) 
 
                 {/* View All Button */}
                 <div className="text-center">
-                    <Link href="/dashboard/courses" className="inline-block bg-gray-100 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">
+                    <Link href="/courses" className="inline-block bg-gray-100 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors font-medium">
                         View All Courses
                     </Link>
                 </div>

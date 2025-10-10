@@ -29,21 +29,6 @@ export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => vo
         totalSeats: 100
     };
 
-    interface Course {
-        id: string;
-        title: string;
-        category: string;
-        level: string;
-        price: number;
-        currency: string;
-        is_free: boolean;
-        thumbnail_url: string | null;
-        tutor: { first_name: string; last_name: string };
-        attendee_count: number;
-    }
-
-    const [recommended, setRecommended] = useState<Course[]>([]);
-    const [loading, setLoading] = useState(true);
     const onLoadedRef = useRef(onLoaded);
 
     // Keep stable reference to onLoaded
@@ -69,37 +54,10 @@ export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => vo
         return () => clearInterval(timer);
     }, []);
 
+    // Call onLoaded when component mounts
     useEffect(() => {
-        let mounted = true;
-        const fetchCourses = async () => {
-            try {
-                setLoading(true);
-                const res = await fetch(API_ENDPOINTS.courses.list);
-                if (res.ok) {
-                    const data = await res.json();
-                    const list: Course[] = data.courses || [];
-                    if (!mounted) return;
-                    setRecommended(list.slice(0, 2));
-                }
-            } catch (e) {
-                // fail silently
-            } finally {
-                if (!mounted) return;
-                setLoading(false);
-                onLoadedRef.current?.();
-            }
-        };
-        fetchCourses();
-        return () => { mounted = false };
+        onLoadedRef.current?.();
     }, []);
-
-    const getDefaultThumbnail = (index: number) => {
-        const thumbnails = [
-            "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400",
-            "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400"
-        ];
-        return thumbnails[index % thumbnails.length];
-    };
 
     return (
         <section className="bg-gray-50 py-20 lg:py-28">
@@ -209,49 +167,6 @@ export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => vo
                     </div>
                 </div>
 
-                {/* More Courses */}
-                {!loading && recommended.length > 0 && (
-                    <div className="mt-20">
-                        <h3 className="text-gray-900 text-xl font-semibold mb-6">
-                            More Popular Courses
-                        </h3>
-                        <div className="grid sm:grid-cols-2 gap-4">
-                            {recommended.map((course, index) => (
-                                <a
-                                    key={course.id}
-                                    href={`/dashboard/courses/${course.id}`}
-                                    className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors group"
-                                >
-                                    <div className="flex items-start gap-4">
-                                        <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
-                                            <img
-                                                src={course.thumbnail_url || getDefaultThumbnail(index)}
-                                                alt={course.title}
-                                                className="absolute inset-0 w-full h-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-gray-900 text-base mb-1 group-hover:text-blue-600 transition-colors">
-                                                {course.title}
-                                            </p>
-                                            <p className="text-sm text-gray-600 mb-3">
-                                                by {course.tutor.first_name} {course.tutor.last_name}
-                                            </p>
-                                            <div className="flex items-center justify-between text-sm">
-                                                <span className="text-gray-500">
-                                                    {course.attendee_count || 0} students
-                                                </span>
-                                                <span className="font-semibold text-gray-900">
-                                                    {course.is_free ? 'Free' : `${course.currency} ${course.price.toLocaleString()}`}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                )}
             </div>
         </section>
     );

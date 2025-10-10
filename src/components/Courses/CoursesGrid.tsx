@@ -144,7 +144,7 @@ export default function CoursesGrid() {
             {/* Course Image */}
             <div className="relative h-48">
               <Image
-                src={course.thumbnail_url || getDefaultThumbnail(index)}
+                src={(course.thumbnail_url || "").trim() || getDefaultThumbnail(index)}
                 alt={course.title}
                 width={500}
                 height={500}

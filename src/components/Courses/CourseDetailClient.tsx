@@ -22,11 +22,17 @@ interface Course {
   is_free: boolean;
   thumbnail_url: string | null;
   tutor: {
+    id: string;
     first_name: string;
     last_name: string;
+    avatar_url?: string | null;
+    bio?: string;
   };
-  attendee_count: number;
+  enrollment_count: number;
   description?: string;
+  scheduled_start?: string;
+  scheduled_end?: string;
+  average_rating?: number;
 }
 
 export default function CourseDetailClient({ courseId }: CourseDetailProps) {
@@ -39,13 +45,33 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
     
     const fetchCourse = async () => {
       try {
-        const res = await fetch(API_ENDPOINTS.courses.detail(courseId));
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const url = API_ENDPOINTS.courses.detail(courseId);
+        console.log('Fetching course from:', url);
+        console.log('Course ID:', courseId);
+        
+        const res = await fetch(url);
+        console.log('Response status:', res.status);
+        console.log('Response ok:', res.ok);
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.log('Error response:', errorText);
+          throw new Error(`HTTP error! status: ${res.status} - ${errorText}`);
+        }
         
         const data = await res.json();
+        console.log('Course data received:', data);
+        
         if (!mounted) return;
         
-        setCourse(data.course || mockCourse);
+        // Check if we have course data - server returns course data directly
+        if (data && data.id) {
+          console.log('Setting course data:', data);
+          setCourse(data);
+        } else {
+          console.log('No valid course data, using mock course');
+          setCourse(mockCourse);
+        }
       } catch (err) {
         console.error('Error fetching course:', err);
         if (!mounted) return;
@@ -70,9 +96,16 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
     currency: "KES",
     is_free: false,
     thumbnail_url: null,
-    tutor: { first_name: "Dr. Sarah", last_name: "Kimani" },
-    attendee_count: 245,
-    description: "Master the fundamentals of machine learning with hands-on projects and real-world applications. This comprehensive course covers everything from basic concepts to advanced algorithms."
+    tutor: { 
+      id: "mock-tutor-id",
+      first_name: "Dr. Sarah", 
+      last_name: "Kimani",
+      avatar_url: null,
+      bio: "AI Research Scientist"
+    },
+    enrollment_count: 245,
+    description: "Master the fundamentals of machine learning with hands-on projects and real-world applications. This comprehensive course covers everything from basic concepts to advanced algorithms.",
+    average_rating: 4.8
   };
 
   if (loading) {
@@ -150,11 +183,11 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
                 <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8">
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    <span>{course.attendee_count} students enrolled</span>
+                    <span>{course.enrollment_count} students enrolled</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span>4.8 (124 reviews)</span>
+                    <span>{course.average_rating?.toFixed(1) || '4.8'} (124 reviews)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
@@ -177,7 +210,7 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
                     <p className="font-medium text-gray-900">
                       {course.tutor.first_name} {course.tutor.last_name}
                     </p>
-                    <p className="text-sm text-gray-600">AI Research Scientist</p>
+                    <p className="text-sm text-gray-600">{course.tutor.bio || 'AI Research Scientist'}</p>
                   </div>
                 </div>
 
@@ -199,7 +232,7 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
               <div className="relative">
                 <div className="relative rounded-2xl overflow-hidden shadow-lg">
                   <Image
-                    src={course.thumbnail_url || "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800"}
+                    src={(course.thumbnail_url || "").trim() || "https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=800"}
                     alt={course.title}
                     width={600}
                     height={400}
@@ -292,7 +325,7 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
                     </div>
                     <div className="flex items-center gap-3">
                       <Users className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-700">Join {course.attendee_count}+ students</span>
+                      <span className="text-gray-700">Join {course.enrollment_count}+ students</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <Globe className="w-4 h-4 text-gray-400" />
