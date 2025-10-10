@@ -20,15 +20,15 @@ export default function Header() {
         <nav className="bg-gray-50 px-4 sm:px-6 py-3">
             <div className="flex items-center justify-between max-w-7xl mx-auto">
                 {/* Logo */}
-                <div className="flex items-center">
+                <Link href='/' className="flex items-center">
                     <Image src="/logo.png" alt="Logo" width={160} height={160} />
-                </div>
+                </Link>
 
                 {/* Navigation Links - Desktop */}
                 <div className="hidden md:flex items-center space-x-8">
-                    <a href="#" className="text-gray-700 hover:text-blue-400 transition-all duration-200 font-medium">
+                    <Link href="/" className="text-gray-700 hover:text-blue-400 transition-all duration-200 font-medium">
                         Home
-                    </a>
+                    </Link>
                     <Link href="/courses" className="text-gray-700 hover:text-blue-400 transition-all duration-200 font-medium">
                         Courses
                     </Link>
@@ -97,13 +97,13 @@ export default function Header() {
                             <div className="flex flex-col gap-6 mt-8">
                                 {/* Navigation Links */}
                                 <div className="flex flex-col gap-2">
-                                    <a
-                                        href="#"
+                                    <Link
+                                        href="/"
                                         className="text-gray-700 hover:text-blue-400 hover:bg-gray-100 transition-all duration-200 font-medium text-lg py-3 px-4 rounded-lg"
                                         onClick={() => setMobileMenuOpen(false)}
                                     >
                                         Home
-                                    </a>
+                                    </Link>
                                     <Link
                                         href="/courses"
                                         className="text-gray-700 hover:text-blue-400 hover:bg-gray-100 transition-all duration-200 font-medium text-lg py-3 px-4 rounded-lg"
