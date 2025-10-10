@@ -1,6 +1,7 @@
 'use client'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Clock, Users, ArrowRight, Star, Award, Zap } from "lucide-react";
+import { API_ENDPOINTS } from "@/lib/config";
 
 export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => void }) {
     const [timeLeft, setTimeLeft] = useState({
@@ -42,6 +43,12 @@ export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => vo
 
     const [recommended, setRecommended] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
+    const onLoadedRef = useRef(onLoaded);
+
+    // Keep stable reference to onLoaded
+    useEffect(() => {
+        onLoadedRef.current = onLoaded;
+    }, [onLoaded]);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -65,7 +72,8 @@ export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => vo
         let mounted = true;
         const fetchCourses = async () => {
             try {
-                const res = await fetch('/api/courses');
+                setLoading(true);
+                const res = await fetch(API_ENDPOINTS.courses.list);
                 if (res.ok) {
                     const data = await res.json();
                     const list: Course[] = data.courses || [];
@@ -77,12 +85,12 @@ export default function FeaturedCourseBanner({ onLoaded }: { onLoaded?: () => vo
             } finally {
                 if (!mounted) return;
                 setLoading(false);
-                onLoaded?.();
+                onLoadedRef.current?.();
             }
         };
         fetchCourses();
         return () => { mounted = false };
-    }, [onLoaded]);
+    }, []);
 
     const getDefaultThumbnail = (index: number) => {
         const thumbnails = [

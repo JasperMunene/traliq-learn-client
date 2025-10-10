@@ -3,7 +3,7 @@
 import { Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { API_ENDPOINTS } from "@/lib/config";
 
 interface Course {
@@ -26,12 +26,20 @@ export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) 
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const onLoadedRef = useRef(onLoaded);
+
+    // Keep a stable reference to onLoaded without re-running the fetch
+    useEffect(() => {
+        onLoadedRef.current = onLoaded;
+    }, [onLoaded]);
 
     useEffect(() => {
         let mounted = true;
         
         const fetchCourses = async () => {
             try {
+                // Ensure loading state is set when effect runs
+                setLoading(true);
                 console.log('Fetching courses from:', API_ENDPOINTS.courses.list);
                 const res = await fetch(API_ENDPOINTS.courses.list);
                 
@@ -58,13 +66,13 @@ export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) 
             } finally {
                 if (!mounted) return;
                 setLoading(false);
-                onLoaded?.();
+                onLoadedRef.current?.();
             }
         };
         
         fetchCourses();
         return () => { mounted = false };
-    }, [onLoaded]);
+    }, []);
 
     const getDefaultThumbnail = (i: number) => {
         const imgs = [
@@ -127,7 +135,7 @@ export default function CoursesSection({ onLoaded }: { onLoaded?: () => void }) 
                             {/* Course Image */}
                             <div className="relative h-48">
                                 <Image
-                                    src={course.thumbnail_url || getDefaultThumbnail(index)}
+                                    src={course.thumbnail_url?.trim() || getDefaultThumbnail(index)}
                                     alt={course.title}
                                     width={500}
                                     height={500}
