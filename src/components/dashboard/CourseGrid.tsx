@@ -1,4 +1,4 @@
-import { Users, CircleCheck as CheckCircle, BookOpen, Building2 } from "lucide-react";
+import { Users, BookOpen, Building2 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { fetchWithAuth } from "@/lib/api";

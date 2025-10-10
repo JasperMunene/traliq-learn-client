@@ -108,7 +108,7 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
         <Header />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 text-center">
           <h1 className="text-2xl font-semibold text-gray-900 mb-4">Course Not Found</h1>
-          <p className="text-gray-600 mb-8">The course you're looking for doesn't exist or has been removed.</p>
+          <p className="text-gray-600 mb-8">The course you&apos;re looking for doesn&apos;t exist or has been removed.</p>
           <Link href="/courses" className="bg-[#1447E6] text-white px-6 py-3 rounded-lg hover:bg-[#1039C4] transition-colors font-medium">
             Browse All Courses
           </Link>
@@ -222,7 +222,7 @@ export default function CourseDetailClient({ courseId }: CourseDetailProps) {
             <div className="grid lg:grid-cols-3 gap-12">
               {/* Main Content */}
               <div className="lg:col-span-2">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6">What you'll learn</h2>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">What you&apos;ll learn</h2>
                 <div className="grid md:grid-cols-2 gap-4 mb-12">
                   {[
                     "Understand machine learning fundamentals",
