@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AuthLayout } from '../AuthLayout';
 import { Button } from '@/components/ui/button';
@@ -34,7 +34,7 @@ interface LoginError {
     user_id?: string;
 }
 
-export default function LoginPage() {
+function LoginPageContent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
@@ -446,5 +446,22 @@ export default function LoginPage() {
                 )}
             </div>
         </AuthLayout>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <AuthLayout title="Sign in to your account">
+                <div className="flex items-center justify-center min-h-[400px]">
+                    <div className="text-center">
+                        <div className="w-16 h-16 border-4 border-gray-900 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-gray-600">Loading...</p>
+                    </div>
+                </div>
+            </AuthLayout>
+        }>
+            <LoginPageContent />
+        </Suspense>
     );
 }

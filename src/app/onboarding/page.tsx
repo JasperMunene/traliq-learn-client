@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { ArrowRight, BookOpen, Users } from "lucide-react";
 import Loader from "@/components/Loader";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,7 +16,7 @@ interface User {
     updated_at: string;
 }
 
-export default function OnboardingPage() {
+function OnboardingPageContent() {
     const [selected, setSelected] = useState<'tutor' | 'learner' | null>(null);
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
@@ -316,5 +316,17 @@ export default function OnboardingPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function OnboardingPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <Loader />
+            </div>
+        }>
+            <OnboardingPageContent />
+        </Suspense>
     );
 }
