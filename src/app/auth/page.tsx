@@ -58,9 +58,10 @@ const AuthCallback = () => {
                         progress: 100
                     });
 
-                    // Redirect to onboarding after showing success
+                    // Redirect to intended destination or dashboard after showing success
                     setTimeout(() => {
-                        router.push('/onboarding');
+                        const redirect = urlParams.get('redirect') || urlParams.get('next');
+                        router.push(redirect || '/dashboard');
                     }, 2000);
                 } else {
                     setAuthState({
@@ -88,7 +89,9 @@ const AuthCallback = () => {
     }, [router]);
 
     const handleRetryAuth = () => {
-        window.location.href = '/auth/login';
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect') || params.get('next');
+        window.location.href = redirect ? `/auth/login?redirect=${encodeURIComponent(redirect)}` : '/auth/login';
     };
 
     // Error state
@@ -148,15 +151,15 @@ const AuthCallback = () => {
 
                     <div className="flex items-center justify-center space-x-2 text-blue-600 mb-6">
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm font-medium">Redirecting to onboarding...</span>
+                        <span className="text-sm font-medium">Redirecting to dashboard...</span>
                     </div>
 
                     <button
-                        onClick={() => router.push('/onboarding')}
+                        onClick={() => router.push('/dashboard')}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
                     >
                         <ArrowRight className="w-4 h-4" />
-                        Continue to Onboarding
+                        Go to Dashboard
                     </button>
                 </div>
             </div>

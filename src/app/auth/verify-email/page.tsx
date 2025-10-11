@@ -162,11 +162,8 @@ function VerifyEmailContent() {
 
                 // Redirect to login page with redirect URL preserved after a short delay
                 setTimeout(() => {
-                    if (redirectUrl) {
-                        router.push(`/auth/login?verified=true&redirect=${encodeURIComponent(redirectUrl)}`);
-                    } else {
-                        router.push('/auth/login?verified=true');
-                    }
+                    const dest = redirectUrl || '/dashboard';
+                    router.push(`/auth/login?verified=true&redirect=${encodeURIComponent(dest)}`);
                 }, 2000);
 
             } else {
@@ -403,7 +400,7 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-gray-600">Loading...</div></div>}>
+        <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center"><div className="text-gray-600">Loading...</div></div>}>
             <VerifyEmailContent />
         </Suspense>
     );

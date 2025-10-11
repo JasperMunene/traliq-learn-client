@@ -42,11 +42,13 @@ export default function SignupPage() {
     const searchParams = useSearchParams();
     const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
 
-    // Get redirect URL from query params on mount
+    // Get redirect URL from query params on mount (supports 'redirect' or 'next')
     useEffect(() => {
         const redirect = searchParams.get('redirect');
-        if (redirect) {
-            setRedirectUrl(redirect);
+        const next = searchParams.get('next');
+        const dest = redirect || next;
+        if (dest) {
+            setRedirectUrl(dest);
         }
     }, [searchParams]);
 
@@ -159,7 +161,7 @@ export default function SignupPage() {
         setIsGoogleLoading(true);
         try {
             // Use professional auth service for OAuth
-            authService.initiateGoogleOAuth();
+            authService.initiateGoogleOAuth(redirectUrl || undefined);
         } catch (error) {
             console.error('Google OAuth initiation failed:', error);
             setErrors({ general: 'Failed to initialize Google authentication. Please try again.' });

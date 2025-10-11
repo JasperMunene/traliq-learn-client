@@ -57,11 +57,14 @@ export class AuthService {
   /**
    * Initialize Google OAuth flow
    */
-  public initiateGoogleOAuth(): void {
+  public initiateGoogleOAuth(redirect?: string): void {
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
     const url = new URL(API_ENDPOINTS.auth.googleOAuth);
     if (origin) {
       url.searchParams.set('redirect_uri', origin);
+    }
+    if (redirect) {
+      url.searchParams.set('redirect', redirect);
     }
     window.location.href = url.toString();
   }

@@ -54,11 +54,13 @@ export default function LoginPage() {
     const searchParams = useSearchParams();
     const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
 
-    // Get redirect URL from query params on mount
+    // Get redirect URL from query params on mount (supports 'redirect' or 'next')
     useEffect(() => {
         const redirect = searchParams.get('redirect');
-        if (redirect) {
-            setRedirectUrl(redirect);
+        const next = searchParams.get('next');
+        const dest = redirect || next;
+        if (dest) {
+            setRedirectUrl(dest);
         }
     }, [searchParams]);
 
@@ -123,12 +125,11 @@ export default function LoginPage() {
                 // Initialize token refresh scheduler
                 initializeTokenRefresh();
 
-                // Redirect to intended page or onboarding (with redirect preserved)
+                // Redirect to intended page or dashboard (no onboarding)
                 if (redirectUrl) {
-                    // Pass redirect URL to onboarding in case user needs to select role
-                    router.push(`/onboarding?redirect=${encodeURIComponent(redirectUrl)}`);
+                    router.push(redirectUrl);
                 } else {
-                    router.push('/onboarding');
+                    router.push('/dashboard');
                 }
 
             } else {
@@ -136,8 +137,9 @@ export default function LoginPage() {
                 const errorData = data as LoginError;
 
                 if (errorData.needs_verification && errorData.user_id) {
-                    // Redirect to verification page
-                    router.push(`/auth/verify-email?user_id=${errorData.user_id}`);
+                    // Redirect to verification page, preserving redirect if present
+                    const verifyUrl = `/auth/verify-email?user_id=${errorData.user_id}`;
+                    router.push(redirectUrl ? `${verifyUrl}&redirect=${encodeURIComponent(redirectUrl)}` : verifyUrl);
                     return;
                 }
 
@@ -162,7 +164,7 @@ export default function LoginPage() {
                 return;
             }
             // Use professional auth service for OAuth
-            authService.initiateGoogleOAuth();
+            authService.initiateGoogleOAuth(redirectUrl || undefined);
         } catch (error) {
             console.error('Google OAuth initiation failed:', error);
             setErrors({ general: 'Failed to initialize Google authentication. Please try again.' });
